@@ -21,6 +21,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import EditIconSVG from "@/public/assets/svgs/EditIcon";
+import SurveyIconSVG from "@/public/assets/svgs/SurveyIcon";
+import NoActiveSurveySVG from "@/public/assets/svgs/NoActiveSurvey";
 
 export const metadata: Metadata = {
 	title: "SurveyPlus Sponsors Dashboard",
@@ -79,13 +81,29 @@ const mockSurveys: Survey[] = [
 const getStatusBadge = (status: Survey["status"]) => {
 	switch (status) {
 		case "Open":
-			return <Badge className="bg-green-500 text-white rounded-full px-3 py-1 text-xs">Open</Badge>;
+			return (
+				<Badge className="bg-[#E2FFD9] text-[#249B00] rounded-tl-none rounded-tr-none rounded-bl-sm rounded-br-sm px-3 py-1 text-xs">
+					Open
+				</Badge>
+			);
 		case "Closed":
-			return <Badge className="bg-red-500 text-white rounded-full px-3 py-1 text-xs">Closed</Badge>;
+			return (
+				<Badge className="bg-[#FFDEDE] text-[#820000] rounded-tl-none rounded-tr-none rounded-bl-sm rounded-br-sm px-3 py-1 text-xs">
+					Closed
+				</Badge>
+			);
 		case "Draft":
-			return <Badge className="bg-yellow-500 text-white rounded-full px-3 py-1 text-xs">Draft</Badge>;
+			return (
+				<Badge className="bg-[#FFF1DB] text-[#FF9D00] rounded-tl-none rounded-tr-none rounded-bl-sm rounded-br-sm px-3 py-1 text-xs">
+					Draft
+				</Badge>
+			);
 		default:
-			return <Badge className="bg-gray-500 text-white rounded-full px-3 py-1 text-xs">{status}</Badge>;
+			return (
+				<Badge className="bg-gray-500 text-white rounded-tl-none rounded-tr-none rounded-bl-sm rounded-br-sm px-3 py-1 text-xs">
+					{status}
+				</Badge>
+			);
 	}
 };
 
@@ -99,7 +117,7 @@ const getProgressBarColor = (responses: string) => {
 
 export default function DashboardPage() {
 	return (
-		<div className="bg-gray-100 min-h-screen">
+		<div className="bg-gray-100 min-h-screen px-6">
 			<div className="flex flex-col">
 				<div className="w-full rounded-lg shadow-sm border border-primary/50 mt-6 bg-primary/6 px-8 py-4">
 					<h5 className="text-primary/80 dark:text-primary/80 ">Hi, Deeferent Media</h5>
@@ -123,8 +141,8 @@ export default function DashboardPage() {
 				</div>
 				{/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6"> */}
 				<div className="flex flex-wrap gap-6 mt-6">
-					<Card className="bg-foreground rounded-3xl relative cursor-pointer">
-						<CardContent className="flex flex-col items-center justify-center px-6 h-[100%]">
+					<Card className="bg-foreground rounded-3xl relative cursor-pointer ">
+						<CardContent className="flex flex-col items-center justify-center min-w-[220px] h-[100%]">
 							<Plus className="h-6 w-6 text-white" />
 							<Button className="bg-transparent text-white font-bold px-4 ">Create Survey</Button>
 						</CardContent>
@@ -145,7 +163,7 @@ export default function DashboardPage() {
 						<div className="flex flex-col justify-center items-center text-center px-12">
 							<CardTitle className="text-3xl font-bold mt-2 text-[#FF9D00]">8</CardTitle>
 							<CardDescription className="text-sm font-medium text-gray-500">
-								Draft
+								Drafts
 							</CardDescription>
 						</div>
 					</Card>
@@ -191,69 +209,86 @@ export default function DashboardPage() {
 					<div className="">
 						<Table>
 							<TableBody className="flex flex-col gap-y-5 bg-gray-100 ">
-								{mockSurveys.map((survey, index) => (
-									<TableRow
-										className="bg-white rounded-lg w-full py-4 flex items-center justify-start gap-5"
-										key={index}
-									>
-										<TableCell className="">
-											<Button variant="ghost" size="icon">
-												<EllipsisVertical className="h-4 w-4" />
-											</Button>
-										</TableCell>
-										<TableCell className="font-medium min-w-[400px]">
-											<div className="flex flex-col items-start gap-2 font-bold">
-												<div className="flex items-center justify-between w-full">
-													<h6 className="text-xl">{survey.title}</h6>
-													<button className="scale-70 cursor-pointer">
-														<EditIconSVG />
-													</button>
+								{!mockSurveys || mockSurveys.length < 1 ? (
+									<div className="flex items-center w-full justify-center mt-[10%]">
+										<NoActiveSurveySVG />
+									</div>
+								) : (
+									mockSurveys.map((survey, index) => (
+										<TableRow
+											className="bg-white rounded-lg w-full py-4 flex items-center justify-start gap-5 relative"
+											key={index}
+										>
+											<TableCell className="">
+												<Button variant="ghost" size="icon">
+													<EllipsisVertical className="h-4 w-4" />
+												</Button>
+											</TableCell>
+											<TableCell className="font-medium min-w-[400px]">
+												<div className="flex flex-col items-start gap-2 font-bold">
+													<div className="flex items-center justify-between w-full">
+														<h6 className="text-xl">{survey.title}</h6>
+														<button className="scale-70 cursor-pointer">
+															<EditIconSVG />
+														</button>
+													</div>
+													<span className="text-gray-500 font-normal text-xs">
+														Created on {survey.created} | Modified{" "}
+														{survey.modified}
+													</span>
 												</div>
-												<span className="text-gray-500 font-normal text-xs">
-													Created on {survey.created} | Modified{" "}
-													{survey.modified}
-												</span>
-											</div>
-										</TableCell>
-										<div className="px-3 py-8 border-r border-foreground/40"></div>
-										<TableCell className="w-full flex items-center justify-end py-6">
-											<div className="flex items-center gap-2 justify-end ">
-												<span className="text-gray-500 font-normal">
-													{survey.responses}
-												</span>
-												<div className="h-3 w-40 bg-gray-200 rounded-full">
-													<div
-														className={`h-full rounded-full ${getProgressBarColor(
-															survey.responses
-														)}`}
-														style={{
-															width: `${
-																(parseInt(
-																	survey.responses.split("/")[0]
-																) /
-																	parseInt(
-																		survey.responses.split("/")[1]
-																	)) *
-																100
-															}%`,
-														}}
-													/>
+											</TableCell>
+											<div className="px-3 py-8 border-r border-foreground/40"></div>
+											<TableCell className="w-full flex items-center justify-end py-6">
+												<div className="flex items-center gap-2 justify-end ">
+													<span className="text-gray-500 font-normal">
+														{survey.responses}
+													</span>
+													<div className="h-3 w-40 bg-gray-200 rounded-full">
+														<div
+															className={`h-full rounded-full ${getProgressBarColor(
+																survey.responses
+															)}`}
+															style={{
+																width: `${
+																	(parseInt(
+																		survey.responses.split("/")[0]
+																	) /
+																		parseInt(
+																			survey.responses.split(
+																				"/"
+																			)[1]
+																		)) *
+																	100
+																}%`,
+															}}
+														/>
+													</div>
 												</div>
-											</div>
-										</TableCell>
-										<div className="px-3 py-8 border-r border-foreground/40"></div>
-										<TableCell className="w-full flex flex-col items-center justify-center">
-											<p className="text-2xl font-bold">{survey.questions}</p>
-											<p className='text-gray-500 font-normal"'>Questions</p>
-										</TableCell>
-										<div className="px-3 py-8 border-r border-foreground/40"></div>
-										<TableCell className="w-full flex flex-col items-center justify-center">
-											<p className=" text-2xl font-bold">{survey.avgTime}</p>
-											<p className='text-gray-500 font-normal"'>Average time spent</p>
-										</TableCell>
-										<TableCell>{getStatusBadge(survey.status)}</TableCell>
-									</TableRow>
-								))}
+											</TableCell>
+											<div className="px-3 py-8 border-r border-foreground/40"></div>
+											<TableCell className="w-full flex flex-col items-center justify-center">
+												<p className="text-2xl font-bold">{survey.questions}</p>
+												<p className='text-gray-500 font-normal"'>Questions</p>
+											</TableCell>
+											<div className="px-3 py-8 border-r border-foreground/40"></div>
+											<TableCell className="w-full flex flex-col items-center justify-center">
+												<p className=" text-2xl font-bold">{survey.avgTime}</p>
+												<p className='text-gray-500 font-normal"'>
+													Average time spent
+												</p>
+											</TableCell>
+											<TableCell className="absolute -top-2 right-3">
+												{getStatusBadge(survey.status)}
+											</TableCell>
+											<TableCell>
+												<i>
+													<SurveyIconSVG />
+												</i>
+											</TableCell>
+										</TableRow>
+									))
+								)}
 							</TableBody>
 						</Table>
 					</div>
