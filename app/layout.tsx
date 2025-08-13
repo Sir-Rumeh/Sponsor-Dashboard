@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-	title: "Survey Plus Sponsors Dashboard (Next.js & Typescript)",
+	title: "SurveyPlus Sponsors Dashboard",
 	description: "WowDash - Admin Dashboard Multipurpose Next.js, TypeScript, ShadCn UI & Tailwind Template",
 	metadataBase: new URL("https://wowdash-nextjs-typescript-shadcn-5fu5.vercel.app"),
 	openGraph: {
