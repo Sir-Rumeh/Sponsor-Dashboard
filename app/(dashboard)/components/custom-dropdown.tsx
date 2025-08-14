@@ -1,4 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SelectIcon } from "@radix-ui/react-select";
 import React from "react";
 
 interface DropdownOption {
@@ -11,6 +12,8 @@ interface CustomDropdownProps {
 	value?: string;
 	placeholder?: string;
 	selectTriggerClasses?: string;
+	defaultValue?: any;
+	onValueChange?: any;
 
 	//   onChange: (value: string | number) => void;
 }
@@ -19,16 +22,17 @@ function CustomDropdown({
 	options,
 	value,
 	placeholder = "Select an option",
-	selectTriggerClasses, //   onChange,
+	selectTriggerClasses,
+	defaultValue,
+	onValueChange,
 }: CustomDropdownProps) {
 	return (
 		<>
-			<Select>
+			<Select defaultValue={defaultValue} onValueChange={onValueChange}>
 				<SelectTrigger className={`w-full rounded-sm bg-foreground/6 ${selectTriggerClasses}`}>
-					{/* <SelectValue placeholder="All Surveys" /> */}
 					<SelectValue placeholder={placeholder} />
 				</SelectTrigger>
-				<SelectContent className="rounded-lg bg-white">
+				<SelectContent className="rounded-md bg-white">
 					{options?.map((option) => {
 						return <SelectItem value={option.value}>{option.label}</SelectItem>;
 					})}

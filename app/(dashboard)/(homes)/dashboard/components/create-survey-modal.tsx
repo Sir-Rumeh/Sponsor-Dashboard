@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 interface CreateSurveyModalProps {
@@ -22,6 +23,7 @@ type FormValues = {
 };
 
 const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({ isOpen, onClose }) => {
+	const router = useRouter();
 	const {
 		register,
 		handleSubmit,
@@ -32,7 +34,8 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({ isOpen, onClose }
 	const adminOption = watch("administrationOption");
 
 	const handleConductSurvey = (data: FormValues) => {
-		console.log(adminOption);
+		console.log(data);
+		router.push("/create-survey");
 	};
 
 	const handleCloseModal = () => {
@@ -61,7 +64,7 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({ isOpen, onClose }
 								{...register("surveyName", { required: "Survey Name is required" })}
 								id="surveyName"
 								placeholder="Enter survey name"
-								className="border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-lg !shadow-none !ring-0"
+								className="border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
 							/>
 							{errors.surveyName && (
 								<p className="text-red-500 text-sm">{errors.surveyName.message}</p>
@@ -79,16 +82,11 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({ isOpen, onClose }
 								})}
 								id="numberOfRespondents"
 								placeholder="Enter here"
-								className="border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-lg !shadow-none !ring-0"
+								className="border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
 							/>
 							{errors.numberOfRespondents && (
 								<p className="text-red-500 text-sm">{errors.numberOfRespondents.message}</p>
 							)}
-							{/* <CustomDropdown
-								options={numberOfRespondents}
-								placeholder="Number of Respondents"
-								selectTriggerClasses="border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 bg-transparent h-12 rounded-lg !shadow-none !ring-0"
-							/> */}
 						</div>
 
 						<div className="w-full space-y-1">
@@ -145,7 +143,7 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({ isOpen, onClose }
 									})}
 									id="incentiveAmount"
 									placeholder="Enter amount"
-									className="border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-lg !shadow-none !ring-0"
+									className="border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
 								/>
 								{errors.incentiveAmount && (
 									<p className="text-red-500 text-sm">{errors.incentiveAmount.message}</p>

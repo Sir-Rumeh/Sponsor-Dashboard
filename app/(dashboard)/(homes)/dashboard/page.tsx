@@ -26,6 +26,7 @@ import SurveyIconSVG from "@/public/assets/svgs/SurveyIcon";
 import NoActiveSurveySVG from "@/public/assets/svgs/NoActiveSurvey";
 import CreateSurveyModal from "./components/create-survey-modal";
 import CustomDropdown from "../../components/custom-dropdown";
+import { useRouter } from "next/navigation";
 
 // export const metadata: Metadata = {
 // 	title: "SurveyPlus Sponsors Dashboard",
@@ -120,6 +121,7 @@ const getProgressBarColor = (responses: string) => {
 
 export default function DashboardPage() {
 	const [isCreateSurveyModal, setIsCreateSurveyModal] = useState<boolean>(false);
+	const router = useRouter();
 
 	const surveyTypes = [
 		{ value: "all", label: "All Surveys" },
