@@ -10,12 +10,10 @@ export const metadata: Metadata = {
 
 const ViewProfile = () => {
 	return (
-		<>
+		<div className="w-full px-6 xl:px-8">
 			<DashboardBreadcrumb title="View Profile" text="View Profile" />
-			<div className="w-full px-8">
-				<ViewProfileSidebar />
-			</div>
-		</>
+			<ViewProfileSidebar />
+		</div>
 	);
 };
 export default ViewProfile;
