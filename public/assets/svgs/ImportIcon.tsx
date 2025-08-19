@@ -13,7 +13,7 @@ export default function ImportIcon({ ...props }: ImportIconProps) {
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 			{...props}
-			// className={`scale-150 ${className}`}
+			// className={`group-hover:fill-white`}
 		>
 			<rect width="20" height="14" fill="url(#pattern0_447_819)" />
 			<defs>

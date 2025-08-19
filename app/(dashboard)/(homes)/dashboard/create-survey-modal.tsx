@@ -35,7 +35,7 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({ isOpen, onClose }
 
 	const handleConductSurvey = (data: FormValues) => {
 		console.log(data);
-		router.push("/create-survey");
+		router.push(`/create-survey?from=dashboard&surveyName=${encodeURIComponent(data.surveyName)}`);
 	};
 
 	const handleCloseModal = () => {

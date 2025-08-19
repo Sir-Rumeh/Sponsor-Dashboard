@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 import EditIconSVG from "@/public/assets/svgs/EditIcon";
 import SurveyIconSVG from "@/public/assets/svgs/SurveyIcon";
 import NoActiveSurveySVG from "@/public/assets/svgs/NoActiveSurvey";
-import CreateSurveyModal from "./components/create-survey-modal";
+import CreateSurveyModal from "./create-survey-modal";
 import CustomDropdown from "../../components/custom-dropdown";
 import { useRouter } from "next/navigation";
 

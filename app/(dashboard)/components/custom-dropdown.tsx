@@ -29,12 +29,18 @@ function CustomDropdown({
 	return (
 		<>
 			<Select defaultValue={defaultValue} onValueChange={onValueChange}>
-				<SelectTrigger className={`w-full rounded-sm bg-foreground/6 ${selectTriggerClasses}`}>
+				<SelectTrigger
+					className={`w-full rounded-sm bg-foreground/6 cursor-pointer ${selectTriggerClasses}`}
+				>
 					<SelectValue placeholder={placeholder} />
 				</SelectTrigger>
 				<SelectContent className="rounded-md bg-white">
 					{options?.map((option) => {
-						return <SelectItem value={option.value}>{option.label}</SelectItem>;
+						return (
+							<SelectItem className="cursor-pointer" value={option.value}>
+								{option.label}
+							</SelectItem>
+						);
 					})}
 				</SelectContent>
 			</Select>
