@@ -164,25 +164,214 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 					<RadioGroup onValueChange={setEditedValue} value={editedValue}>
 						<div className="flex items-center space-x-2">
 							<RadioGroupItem value="All settlement types" id="all-settlements" />
-							<Label htmlFor="all-settlements">All settlement types</Label>
+							<Label className="cursor-pointer" htmlFor="all-settlements">
+								All settlement types
+							</Label>
 						</div>
 						<div className="flex items-center space-x-2">
 							<RadioGroupItem value="Urban" id="urban" />
-							<Label htmlFor="urban">Urban</Label>
+							<Label className="cursor-pointer" htmlFor="urban">
+								Urban
+							</Label>
 						</div>
 						<div className="flex items-center space-x-2">
 							<RadioGroupItem value="Rural" id="rural" />
-							<Label htmlFor="rural">Rural</Label>
+							<Label className="cursor-pointer" htmlFor="rural">
+								Rural
+							</Label>
 						</div>
 					</RadioGroup>
 				);
 			case "Monthly Income":
+				return (
+					<RadioGroup onValueChange={setEditedValue} value={editedValue}>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem
+								className="cursor-pointer"
+								value="All income levels"
+								id="all-income"
+							/>
+							<Label className="cursor-pointer" htmlFor="all-income">
+								All Income level
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem
+								className="cursor-pointer"
+								value="Not currently working, someone else pays my bills"
+								id="not-working"
+							/>
+							<Label className="cursor-pointer" htmlFor="not-working">
+								Not currently working, someone else pays my bills
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem
+								className="cursor-pointer"
+								value="Earn less than N30,000 monthly"
+								id="less-than-30k"
+							/>
+							<Label className="cursor-pointer" htmlFor="less-than-30k">
+								Earn less than N30,000 monthly
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem
+								className="cursor-pointer"
+								value="Earn between N30,001 and N100,000 monthly"
+								id="30k-to-100k"
+							/>
+							<Label className="cursor-pointer" htmlFor="30k-to-100k">
+								Earn between N30,001 and N100,000 monthly
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem
+								className="cursor-pointer"
+								value="Earn above N100,000 monthly"
+								id="above-100k"
+							/>
+							<Label className="cursor-pointer" htmlFor="above-100k">
+								Earn above N100,000 monthly
+							</Label>
+						</div>
+					</RadioGroup>
+				);
 			case "Age group":
+				return (
+					<RadioGroup onValueChange={setEditedValue} value={editedValue}>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="All age groups" id="all-age-groups" />
+							<Label className="cursor-pointer" htmlFor="all-age-groups">
+								All age groups
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="18 - 24 years" id="18-24" />
+							<Label className="cursor-pointer" htmlFor="18-24">
+								18 - 24 years
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="25 - 34 years" id="25-34" />
+							<Label className="cursor-pointer" htmlFor="25-34">
+								25 - 34 years
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="35 - 44 years" id="35-44" />
+							<Label className="cursor-pointer" htmlFor="35-44">
+								35 - 44 years
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="45 - 54 years" id="45-54" />
+							<Label className="cursor-pointer" htmlFor="45-54">
+								45 - 54 years
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="55 - 64 years" id="55-64" />
+							<Label className="cursor-pointer" htmlFor="55-64">
+								55 - 64 years
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="Above 65 years" id="above-65" />
+							<Label className="cursor-pointer" htmlFor="above-65">
+								Above 65 years
+							</Label>
+						</div>
+					</RadioGroup>
+				);
 			case "Education":
-				// Placeholder for other properties, which might use different input types
-				return <p>Editing not yet implemented for this property.</p>;
+				return (
+					<RadioGroup onValueChange={setEditedValue} value={editedValue}>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="All levels" id="all-levels" />
+							<Label className="cursor-pointer" htmlFor="all-levels">
+								All levels
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="Pre-school" id="pre-school" />
+							<Label className="cursor-pointer" htmlFor="pre-school">
+								Pre-school
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="Primary incomplete" id="primary-incomplete" />
+							<Label className="cursor-pointer" htmlFor="primary-incomplete">
+								Primary incomplete
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="Primary complete" id="primary-complete" />
+							<Label className="cursor-pointer" htmlFor="primary-complete">
+								Primary complete
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="Secondary incomplete" id="secondary-incomplete" />
+							<Label className="cursor-pointer" htmlFor="secondary-incomplete">
+								Secondary incomplete
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="Secondary complete" id="secondary-complete" />
+							<Label className="cursor-pointer" htmlFor="secondary-complete">
+								Secondary complete
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="University/Polytechnic Undergraduate" id="uni-undergrad" />
+							<Label className="cursor-pointer" htmlFor="uni-undergrad">
+								University/Polytechnic Undergraduate
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="University/Polytechnic OND complete" id="uni-ond" />
+							<Label className="cursor-pointer" htmlFor="uni-ond">
+								University/Polytechnic OND complete
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="University/Polytechnic HND complete" id="uni-hnd" />
+							<Label className="cursor-pointer" htmlFor="uni-hnd">
+								University/Polytechnic HND complete
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="Post-university incomplete" id="post-uni-incomplete" />
+							<Label className="cursor-pointer" htmlFor="post-uni-incomplete">
+								Post-university incomplete
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="Post-university complete" id="post-uni-complete" />
+							<Label className="cursor-pointer" htmlFor="post-uni-complete">
+								Post-university complete
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem
+								value="Non-formal education (e.g. Arabic/Quranic education)"
+								id="non-formal"
+							/>
+							<Label className="cursor-pointer" htmlFor="non-formal">
+								Non-formal education (e.g. Arabic/Quranic education)
+							</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<RadioGroupItem value="No education" id="no-education" />
+							<Label className="cursor-pointer" htmlFor="no-education">
+								No education
+							</Label>
+						</div>
+					</RadioGroup>
+				);
 			default:
-				return null;
+				return <p>Editing not available for this property.</p>;
 		}
 	};
 
@@ -196,10 +385,13 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 		onClose();
 	};
 
+	const balance = 5000;
+	const estimatedBill = 2500;
+
 	return (
 		<>
 			<Dialog open={isOpen} onOpenChange={handleCloseModal}>
-				<DialogContent className="sm:max-w-[550px] bg-white z-50 rounded-sm px-10">
+				<DialogContent className="sm:max-w-[550px] bg-white z-50 rounded-sm px-8">
 					<DialogHeader className="">
 						<DialogTitle className="text-center text-2xl font-bold text-black">
 							<p className="text-3xl font-bold text-center text-gray-800">Checkout</p>
@@ -221,8 +413,8 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 							</div>
 						</div>
 
-						<div className="rounded-lg border overflow-hidden w-full">
-							<Table className="table-auto border-collapse border-0 w-full">
+						<div className="rounded-lg overflow-hidden w-full">
+							<Table className="table-auto border-collapse border-0 w-full ">
 								<TableHeader className="bg-gray-100">
 									<TableRow className="border-0 h-14 px-1">
 										<TableHead className="w-1/2 font-semibold text-gray-700">
@@ -236,13 +428,13 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 										</TableHead>
 									</TableRow>
 								</TableHeader>
-								<TableBody className="border-none">
+								<TableBody className="border ">
 									{surveyProperties.map((prop) => (
-										<TableRow className="h-14 px-2 border-b" key={prop.id}>
+										<TableRow className="h-14 px-2" key={prop.id}>
 											<TableCell className="font-medium text-gray-800 border-0">
 												{prop.property}
 											</TableCell>
-											<TableCell className="text-gray-600 border-0">
+											<TableCell className="text-gray-600 border-0 whitespace-normal break-words">
 												{prop.value}
 											</TableCell>
 											<TableCell className="text-right border-0">
@@ -259,14 +451,36 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 									))}
 								</TableBody>
 							</Table>
-						</div>
 
-						<Button
-							type="submit"
-							className="mt-6 bg-primary hover:bg-primary/90 text-white cursor-pointer px-8 rounded-sm w-full"
-						>
-							Make Payment
-						</Button>
+							<div className="w-full mt-4 flex items-center justify-end">
+								<p className="text-xl font-bold">Estimated Bill: N{2500}</p>
+							</div>
+
+							{balance < estimatedBill && (
+								<div className="w-full mt-4 flex items-center justify-center">
+									<p className="text-xl font-bold text-center text-red-400">
+										Insufficient Fund
+									</p>
+								</div>
+							)}
+						</div>
+						<div className="w-full mt-2">
+							{balance < estimatedBill ? (
+								<Button
+									type="button"
+									className="bg-primary hover:bg-primary/90 text-white cursor-pointer px-8 py-5 rounded-sm w-full"
+								>
+									Add money to wallet
+								</Button>
+							) : (
+								<Button
+									type="submit"
+									className="bg-primary hover:bg-primary/90 text-white cursor-pointer px-8 py-5 rounded-sm w-full"
+								>
+									Make Payment
+								</Button>
+							)}
+						</div>
 					</form>
 				</DialogContent>
 			</Dialog>

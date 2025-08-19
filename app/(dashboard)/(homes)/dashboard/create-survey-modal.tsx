@@ -100,7 +100,7 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({ isOpen, onClose }
 									{...register("administrationOption", {
 										required: "Please choose administration option",
 									})}
-									className="!shadow-none !ring-0 !focus:ring-0 rounded-[50rem] peer w-4 h-4 text-primary bg-primary/50 border-primary/50 focus:primary/50 dark:focus:primary/50 dark:ring-offset-primary/50 focus:ring-2 dark:bg-primary/50 dark:border-primary/50 accent-primary"
+									className="!shadow-none !ring-0 !focus:ring-0 rounded-[50rem] peer w-4 h-4 text-primary bg-primary/50 border-primary/50 focus:primary/50 dark:focus:primary/50 dark:ring-offset-primary/50 focus:ring-2 dark:bg-primary/50 dark:border-primary/50 accent-primary cursor-pointer"
 									name="administrationOption"
 									id="administrationOption1"
 									defaultChecked
@@ -117,7 +117,7 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({ isOpen, onClose }
 									{...register("administrationOption", {
 										required: "Please choose administration option",
 									})}
-									className="!shadow-none !ring-0 !focus:ring-0 rounded-[50rem] peer w-4 h-4 text-primary bg-primary/50 border-primary/50 focus:primary/50 dark:focus:primary/50 dark:ring-offset-primary/50 focus:ring-2 dark:bg-primary/50 dark:border-primary/50 accent-primary"
+									className="!shadow-none !ring-0 !focus:ring-0 rounded-[50rem] peer w-4 h-4 text-primary bg-primary/50 border-primary/50 focus:primary/50 dark:focus:primary/50 dark:ring-offset-primary/50 focus:ring-2 dark:bg-primary/50 dark:border-primary/50 accent-primary cursor-pointer"
 									name="administrationOption"
 									id="administrationOption2"
 									value="Will Recruit Respondents and Administer Survey to them"
