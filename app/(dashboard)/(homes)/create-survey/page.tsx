@@ -344,7 +344,7 @@ const CreateSurveyPage = () => {
 								<Button
 									onClick={() => handleDeleteQuestion(questions[questions.length - 1].id)}
 									variant="outline"
-									className="flex items-center gap-2 border-primary text-primary hover:bg-primary/10"
+									className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:border-none"
 								>
 									<Trash2 className="h-4 w-4" /> Delete
 								</Button>
