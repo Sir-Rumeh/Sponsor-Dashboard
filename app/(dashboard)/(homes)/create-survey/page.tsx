@@ -193,7 +193,7 @@ const CreateSurveyPage = () => {
 							options={modeTypes}
 							placeholder="Questionaire Mode"
 							selectTriggerClasses="w-[200px] text-white border border-white px-5 dark:border-white focus:border-white dark:focus:border-white focus-visible:border-white h-12 rounded-sm !shadow-none !ring-0"
-							defaultValue="Questionnaire mode"
+							defaultValue="Questionaire mode"
 							// onValueChange={(value: any) => handleModeChange(1, "type", value)}
 						/>
 					</div>

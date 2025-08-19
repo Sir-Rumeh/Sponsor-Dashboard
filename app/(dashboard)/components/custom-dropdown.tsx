@@ -32,7 +32,7 @@ function CustomDropdown({
 				<SelectTrigger
 					className={`w-full rounded-sm bg-foreground/6 cursor-pointer ${selectTriggerClasses}`}
 				>
-					<SelectValue placeholder={placeholder} />
+					{defaultValue ? <>{defaultValue}</> : <SelectValue placeholder={placeholder} />}
 				</SelectTrigger>
 				<SelectContent className="rounded-md bg-white">
 					{options?.map((option) => {
