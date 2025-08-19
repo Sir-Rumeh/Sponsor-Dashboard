@@ -3,20 +3,20 @@ import React from "react";
 import { handleProfileUpdate } from "./actions/handleProfileUpdate";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import AvatarUpload from "./avatar-upload";
 
 const ViewProfileSidebar = () => {
 	return (
 		<div className="user-grid-card relative border border-slate-200 dark:border-slate-600 rounded-2xl overflow-hidden bg-white dark:bg-[#273142] h-full">
 			<div
-				className="w-full h-[200px] bg-cover bg-center"
+				className="w-full h-[200px] bg-cover bg-center relative"
 				style={{ backgroundImage: "url('assets/images/user-grid/user-grid-bg1.png')" }}
 			>
-				<div className="text-center border-b border-slate-200 dark:border-slate-600 translate-y-[35%]">
-					<img
-						src="assets/images/user-grid/user-grid-img14.png"
-						alt=""
-						className="border br-white border-width-2-px w-200-px h-[200px] rounded-full object-fit-cover mx-auto"
-					/>
+				<div className="text-center border-b border-slate-200 dark:border-slate-600 absolute left-1/2 -translate-x-1/2 top-[100px] w-full">
+					<div className="flex justify-center items-center relative">
+						<AvatarUpload />
+					</div>
+
 					<h6 className="mb-0 mt-4">Robiul Hasan</h6>
 					<span className="text-secondary-light mb-4">ifrandom@gmail.com</span>
 				</div>
@@ -29,7 +29,7 @@ const ViewProfileSidebar = () => {
 							<CardContent className="px-0">
 								<div>
 									<form action={handleProfileUpdate}>
-										<div className="grid grid-cols-1 sm:grid-cols-12 gap-x-6">
+										<div className="grid grid-cols-1 sm:grid-cols-12 gap-x-6 md:px-6">
 											<div className="col-span-12 sm:col-span-6">
 												<div className="mb-5">
 													<Label
