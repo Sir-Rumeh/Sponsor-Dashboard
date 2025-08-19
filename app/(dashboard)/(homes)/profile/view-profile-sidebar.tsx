@@ -29,8 +29,9 @@ const ViewProfileSidebar = () => {
 							<CardContent className="px-0">
 								<div>
 									<form action={handleProfileUpdate}>
-										<div className="grid grid-cols-1 sm:grid-cols-12 gap-x-6 md:px-6">
-											<div className="col-span-12 sm:col-span-6">
+										{/* <div className="grid grid-cols-1 sm:grid-cols-12 gap-x-6 md:px-6"> */}
+										<div className="flex flex-col items-center gap-x-6 md:px-6">
+											<div className="w-full max-w-xl">
 												<div className="mb-5">
 													<Label
 														htmlFor="basicInput"
@@ -45,11 +46,11 @@ const ViewProfileSidebar = () => {
 														value={"Robiul Hasan"}
 														placeholder="Enter Full Name"
 														disabled
-														className="disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
+														className="disabled:bg-gray-100 disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
 													/>
 												</div>
 											</div>
-											<div className="col-span-12 sm:col-span-6">
+											<div className="w-full max-w-xl">
 												<div className="mb-5">
 													<Label
 														htmlFor="sponsorType"
@@ -64,11 +65,11 @@ const ViewProfileSidebar = () => {
 														value={"Business Orgamization"}
 														placeholder="Enter Sponsor Type"
 														disabled
-														className="disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
+														className="disabled:bg-gray-100 disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
 													/>
 												</div>
 											</div>
-											<div className="col-span-12 sm:col-span-6">
+											<div className="w-full max-w-xl">
 												<div className="mb-5">
 													<Label
 														htmlFor="email"
@@ -83,11 +84,11 @@ const ViewProfileSidebar = () => {
 														value={"Deefrent@deefrent.com"}
 														placeholder="Enter Email"
 														disabled
-														className="disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
+														className="disabled:bg-gray-100 disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
 													/>
 												</div>
 											</div>
-											<div className="col-span-12 sm:col-span-6">
+											<div className="w-full max-w-xl">
 												<div className="mb-5">
 													<Label
 														htmlFor="number"
@@ -102,11 +103,11 @@ const ViewProfileSidebar = () => {
 														value={"+234 80 8745 2365"}
 														placeholder="Enter phone number"
 														disabled
-														className="disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
+														className="disabled:bg-gray-100 disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
 													/>
 												</div>
 											</div>
-											<div className="col-span-12 sm:col-span-6">
+											<div className="w-full max-w-xl">
 												<div className="mb-5">
 													<Label
 														htmlFor="state"
@@ -121,7 +122,7 @@ const ViewProfileSidebar = () => {
 														value={"Lagos State"}
 														placeholder="Enter State"
 														disabled
-														className="disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
+														className="disabled:bg-gray-100 disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
 													/>
 												</div>
 											</div>

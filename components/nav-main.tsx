@@ -121,7 +121,7 @@ export function NavMain({ items }: { items: SidebarItem[] }) {
 									asChild
 									tooltip={item.title}
 									className={cn(
-										"cursor-pointer py-5.5 px-3 text-base text-[#4b5563] dark:text-white hover:bg-primary/6 active:bg-[#e4f1ff] dark:hover:bg-slate-700",
+										"cursor-pointer py-5.5 px-3 text-base text-[#4b5563] dark:text-white hover:bg-primary/6 active:bg-primary/10 dark:hover:bg-slate-700",
 										isMenuActive
 											? "bg-primary hover:bg-primary text-white dark:hover:bg-primary hover:text-white"
 											: ""
