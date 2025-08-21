@@ -10,6 +10,15 @@ const passwordField = z
 	.regex(/[^a-zA-Z0-9]/, { message: "Contain at least one special character." })
 	.trim();
 
+const phoneNumberField = z
+	.string({ required_error: "Phone number is required" })
+	.min(10, { message: "Phone number must be at least 10 digits" })
+	.max(15, { message: "Phone number must be less than 15 digits" })
+	.regex(/^[0-9\-\(\)\s+]+$/, {
+		message: "Invalid phone number format.",
+	})
+	.trim();
+
 // Email schema base
 const emailField = z.string().min(1, "Email is required").email("Invalid email!");
 const nameField = z.string().min(1, "Name is required");
@@ -26,6 +35,10 @@ export const registerSchema = z.object({
 });
 export const completeRegisterSchema = z.object({
 	name: nameField,
+	sponsorType: nameField,
+	email: emailField,
+	phoneNumber: phoneNumberField,
+	state: nameField,
 	password: passwordField,
 	confirmPassword: passwordField,
 });

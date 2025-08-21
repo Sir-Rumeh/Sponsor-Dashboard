@@ -36,6 +36,10 @@ const ConpleteRegistration = () => {
 		resolver: zodResolver(completeRegisterSchema),
 		defaultValues: {
 			name: "",
+			sponsorType: "",
+			email: "",
+			phoneNumber: "",
+			state: "",
 			password: "",
 			confirmPassword: "",
 		},
@@ -54,13 +58,13 @@ const ConpleteRegistration = () => {
 				if (res?.error) {
 					toast.error(res.error);
 				} else {
-					toast.success("Login successful!");
 					await signIn("credentials", {
 						redirect: true,
 						email: "wowdash@gmail.com",
 						password: "Pa$$w0rd!",
 						callbackUrl: "/dashboard",
 					});
+					toast.success("Signup successful!");
 				}
 			} catch (error) {
 				toast.error("Something went wrong. Please try again.");
@@ -120,7 +124,7 @@ const ConpleteRegistration = () => {
 								</Label>
 								<FormField
 									control={form.control}
-									name="name"
+									name="sponsorType"
 									render={({ field }) => (
 										<FormItem>
 											<FormControl>
@@ -148,7 +152,7 @@ const ConpleteRegistration = () => {
 								</Label>
 								<FormField
 									control={form.control}
-									name="name"
+									name="email"
 									render={({ field }) => (
 										<FormItem>
 											<FormControl>
@@ -176,7 +180,7 @@ const ConpleteRegistration = () => {
 								</Label>
 								<FormField
 									control={form.control}
-									name="name"
+									name="phoneNumber"
 									render={({ field }) => (
 										<FormItem>
 											<FormControl>
@@ -204,7 +208,7 @@ const ConpleteRegistration = () => {
 								</Label>
 								<FormField
 									control={form.control}
-									name="name"
+									name="state"
 									render={({ field }) => (
 										<FormItem>
 											<FormControl>
@@ -313,10 +317,10 @@ const ConpleteRegistration = () => {
 								{loading || isPending ? (
 									<>
 										<Loader2 className="animate-spin h-4.5 w-4.5 mr-2" />
-										Signing in...
+										Signing up...
 									</>
 								) : (
-									"Sign In"
+									"Sign Up"
 								)}
 							</Button>
 						</form>
