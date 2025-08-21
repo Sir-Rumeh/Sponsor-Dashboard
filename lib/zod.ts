@@ -12,6 +12,7 @@ const passwordField = z
 
 // Email schema base
 const emailField = z.string().min(1, "Email is required").email("Invalid email!");
+const nameField = z.string().min(1, "Name is required");
 
 // Login Schema
 export const loginSchema = z.object({
@@ -22,6 +23,11 @@ export const loginSchema = z.object({
 // Register Schema
 export const registerSchema = z.object({
 	email: emailField,
+});
+export const completeRegisterSchema = z.object({
+	name: nameField,
+	password: passwordField,
+	confirmPassword: passwordField,
 });
 // export const registerSchema = loginSchema.extend({
 // 	username: z.string().min(2, {

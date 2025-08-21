@@ -32,9 +32,10 @@ const Login = () => {
 				<div className="lg:max-w-[464px] w-full mx-auto">
 					{/* Logo and heading */}
 					<div>
-						<div className="mb-2.5">
+						<div className="">
 							<ThemeLogo />
 						</div>
+						<h6 className="text-primary mb-2.5 text-center font-bold">Sponsor Sign in</h6>
 
 						<h4 className="font-semibold mb-3">Sign In to your Account</h4>
 						<p className="mb-8 text-secondary-light text-lg">

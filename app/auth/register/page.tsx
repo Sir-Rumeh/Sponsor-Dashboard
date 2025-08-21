@@ -32,14 +32,13 @@ const Register = () => {
 					<div className="lg:max-w-[464px] w-full mx-auto">
 						{/* Logo and heading */}
 						<div>
-							<div className="mb-2.5">
+							<div className="">
 								<ThemeLogo />
 							</div>
+							<h6 className="text-primary mb-2.5 text-center font-bold">Sponsor Sign up</h6>
 
-							<h4 className="font-semibold mb-3">Sign up to your Account</h4>
-							<p className="mb-8 text-secondary-light text-lg">
-								Welcome back! Please enter your details.
-							</p>
+							<h4 className="font-semibold mb-3">Register your Account</h4>
+							<p className="mb-8 text-secondary-light text-lg">Please enter your details.</p>
 						</div>
 
 						{/* Register Form */}
