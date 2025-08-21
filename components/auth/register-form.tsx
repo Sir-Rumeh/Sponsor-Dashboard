@@ -7,13 +7,7 @@ import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,89 +15,65 @@ import { Mail, Lock, Eye, EyeOff, Loader2, UserRound } from "lucide-react";
 import SocialLogin from "./social-login";
 import { registerSchema } from "@/lib/zod";
 import { useLoading } from "@/contexts/LoadingContext";
+import { Label } from "../ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import LinkSentIcon from "@/public/assets/svgs/LinkSentIcon";
 
 const RegisterForm = () => {
-  const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
-  const { loading, setLoading } = useLoading();
+	const router = useRouter();
+	const [showPassword, setShowPassword] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const { loading, setLoading } = useLoading();
 
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-    },
-  });
+	const form = useForm<z.infer<typeof registerSchema>>({
+		resolver: zodResolver(registerSchema),
+		defaultValues: {
+			email: "",
+		},
+	});
 
-  const handleRegisterFormSubmit = async (
-    values: z.infer<typeof registerSchema>
-  ) => {
-    setLoading(true);
+	const handleRegisterFormSubmit = async (values: z.infer<typeof registerSchema>) => {
+		setLoading(true);
 
-    toast.success("User created successfully! Please wait...");
-    router.push("/dashboard");
+		toast.success("Verification email sent...");
+		setIsModalOpen(true);
 
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  };
+		setTimeout(() => {
+			setLoading(false);
+		}, 1000);
+	};
 
-  return (
-    <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(handleRegisterFormSubmit)}
-          className="space-y-5"
-        >
-          {/* Username Field */}
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <div className="relative">
-                    <UserRound className="absolute start-5 top-1/2 transform -translate-y-1/2 text-xl text-neutral-700 dark:text-neutral-200 w-5 h-5" />
-                    <Input
-                      {...field}
-                      type="text"
-                      placeholder="Username"
-                      className="ps-13 pe-12 h-14 rounded-xl bg-neutral-100 dark:bg-slate-800 border border-neutral-300 dark:border-slate-700 focus:border-blue-600 dark:focus:border-blue-600 focus-visible:border-blue-600 !shadow-none !ring-0"
-                      disabled={loading}
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Email Field */}
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <div className="relative">
-                    <Mail className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
-                    <Input
-                      {...field}
-                      type="email"
-                      placeholder="Email"
-                      className="ps-13 pe-12 h-14 rounded-xl bg-neutral-100 dark:bg-slate-800 border border-neutral-300 dark:border-slate-700 focus:border-blue-600 dark:focus:border-blue-600 focus-visible:border-blue-600 !shadow-none !ring-0"
-                      disabled={loading}
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Password Field */}
-          <FormField
+	return (
+		<>
+			<Form {...form}>
+				<form onSubmit={form.handleSubmit(handleRegisterFormSubmit)} className="space-y-5">
+					<Label htmlFor="email" className="text-black dark:text-white mb-3">
+						Verify Email
+					</Label>
+					<FormField
+						control={form.control}
+						name="email"
+						render={({ field }) => (
+							<FormItem>
+								<FormControl>
+									<div className="relative">
+										<Mail className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
+										<Input
+											{...field}
+											type="email"
+											placeholder="Email"
+											name="email"
+											className="ps-13 pe-12 h-14 rounded-xl bg-neutral-100 dark:bg-slate-800 border border-neutral-300 dark:border-slate-700 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 !shadow-none !ring-0"
+											disabled={loading}
+										/>
+									</div>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					{/* Password Field */}
+					{/* <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
@@ -134,87 +104,55 @@ const RegisterForm = () => {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
-          {/* Remember Me and Forgot Password */}
-          <FormField
-            control={form.control}
-            name="acceptTerms"
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex items-start gap-2 flex justify-between items-center">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      id="createAccount"
-                      className="border border-neutral-500 w-4.5 h-4.5 mt-1"
-                    />
-                  </FormControl>
-                  <label htmlFor="createAccount" className="text-sm">
-                    By creating an account means you agree to the{" "}
-                    <Link
-                      href="#"
-                      className="text-blue-600 font-semibold hover:underline"
-                    >
-                      Terms & Conditions
-                    </Link>{" "}
-                    and our{" "}
-                    <Link
-                      href="#"
-                      className="text-blue-600 font-semibold hover:underline"
-                    >
-                      Privacy Policy
-                    </Link>
-                  </label>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+					{/* Submit Button */}
+					<Button type="submit" className="w-full rounded-lg h-[52px] text-sm mt-2" disabled={loading}>
+						{loading ? (
+							<>
+								<Loader2 className="animate-spin h-4.5 w-4.5 mr-2" />
+								Loading...
+							</>
+						) : (
+							"Verify"
+						)}
+					</Button>
+				</form>
+			</Form>
 
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            className="w-full rounded-lg mt-1 h-[52px] text-sm mt-2"
-            disabled={loading}
-          >
-            {loading ? (
-              <>
-                <Loader2 className="animate-spin h-4.5 w-4.5 mr-2" />
-                Loading...
-              </>
-            ) : (
-              "Sign Up"
-            )}
-          </Button>
-        </form>
-      </Form>
+			{/* Divider */}
+			<div className="mt-8 relative text-center before:absolute before:w-full before:h-px before:bg-neutral-300 dark:before:bg-slate-600 before:top-1/2 before:left-0">
+				<span className="relative z-10 px-4 bg-white dark:bg-slate-900 text-base">OR</span>
+			</div>
 
-      {/* Divider */}
-      <div className="mt-8 relative text-center before:absolute before:w-full before:h-px before:bg-neutral-300 dark:before:bg-slate-600 before:top-1/2 before:left-0">
-        <span className="relative z-10 px-4 bg-white dark:bg-slate-900 text-base">
-          Or sign in with
-        </span>
-      </div>
+			{/* Social Login */}
+			<SocialLogin />
 
-      {/* Social Login */}
-      <SocialLogin />
+			{/* Signup Prompt */}
+			<div className="mt-8 text-center text-sm">
+				<p>
+					Already have an account?{" "}
+					<Link href="/auth/login" className="text-primary font-semibold hover:underline">
+						Sign In
+					</Link>
+				</p>
+			</div>
 
-      {/* Signup Prompt */}
-      <div className="mt-8 text-center text-sm">
-        <p>
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/auth/login"
-            className="text-primary font-semibold hover:underline"
-          >
-            Sign In
-          </Link>
-        </p>
-      </div>
-    </>
-  );
+			{
+				<Dialog open={isModalOpen} onOpenChange={() => setIsModalOpen(false)}>
+					<DialogContent className="sm:max-w-[600px] bg-white z-50 rounded-3xl pb-14 pt-10">
+						<div className="mt-2 w-full flex items-center justify-center">
+							<LinkSentIcon />
+						</div>
+						<div className="mt-2 w-full flex flex-col gap-2 items-center justify-center">
+							<h6>Verification Link sent to your email</h6>
+							<p className="text-lg">Click link to complete sign up</p>
+						</div>
+					</DialogContent>
+				</Dialog>
+			}
+		</>
+	);
 };
 
 export default RegisterForm;

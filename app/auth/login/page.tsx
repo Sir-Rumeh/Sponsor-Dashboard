@@ -9,9 +9,8 @@ import { StaticImg } from "@/types/static-image";
 import LoginForm from "@/components/auth/login-form";
 
 const metadata: Metadata = {
-	title: "Register & Create Account | WowDash Admin Dashboard",
-	description:
-		"Create a new user account and get started with the WowDash Admin Dashboard built with Next.js and Tailwind CSS.",
+	title: "Login & Create Account | SurveyPlus Sponsors Admin Dashboard",
+	description: "Login to user account and get started with the SurveyPlus Sponsors Admin Dashboard",
 };
 
 const authImage: StaticImg = {
@@ -24,11 +23,7 @@ const Login = () => {
 			{/* Left Image */}
 			<div className="lg:w-1/2 hidden lg:block bg-primary/10">
 				<div className="flex items-center justify-center h-screen flex-col">
-					<Image
-						src={authImage.image}
-						alt="Auth Illustration"
-						className="object-cover w-full h-full scale-[70%]"
-					/>
+					<Image src={authImage.image} alt="Auth Illustration" className="object-cover w-full" />
 				</div>
 			</div>
 
@@ -37,7 +32,7 @@ const Login = () => {
 				<div className="lg:max-w-[464px] w-full mx-auto">
 					{/* Logo and heading */}
 					<div>
-						<div className="mb-2.5 ">
+						<div className="mb-2.5">
 							<ThemeLogo />
 						</div>
 

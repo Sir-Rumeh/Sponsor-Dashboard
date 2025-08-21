@@ -44,7 +44,7 @@ const SocialLogin = () => {
 				) : (
 					<>
 						<Image src={GoogleIcon} alt="google" width={18} height={18} />
-						Google
+						Continue with Google
 					</>
 				)}
 			</Button>
@@ -53,4 +53,3 @@ const SocialLogin = () => {
 };
 
 export default SocialLogin;
-// ============================================= Server side way end =======================================
