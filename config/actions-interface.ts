@@ -1,0 +1,3 @@
+interface VerifyEmailInterface {
+	email: string;
+}
