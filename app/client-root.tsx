@@ -21,7 +21,7 @@ export function ClientRoot({ defaultOpen, children }: { defaultOpen: boolean; ch
 					<div className="bg-neutral-100 dark:bg-[#1e2734] md:p-6 p-4 flex-1">{children}</div>
 					{/* <Footer /> */}
 				</main>
-				<Toaster position="top-center" reverseOrder={false} />
+				<Toaster position="top-right" reverseOrder={false} />
 			</SidebarProvider>
 		</ThemeProvider>
 	);

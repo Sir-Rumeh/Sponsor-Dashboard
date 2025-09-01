@@ -35,12 +35,16 @@ const RegisterForm = () => {
 	});
 
 	const handleRegisterFormSubmit = async (values: z.infer<typeof registerSchema>) => {
-		setLoading(true);
-		const res = await verifyEmail(values);
-		if (res) {
+		try {
+			setLoading(true);
+			const res = await verifyEmail(values);
+			if (res) {
+				setLoading(false);
+				toast.success(res.message ?? "Verification email sent...");
+				setIsModalOpen(true);
+			}
+		} catch (error) {
 			setLoading(false);
-			toast.success(res.message ?? "Verification email sent...");
-			setIsModalOpen(true);
 		}
 	};
 

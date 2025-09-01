@@ -6,7 +6,7 @@ const passwordField = z
 	.min(8, { message: "Password must be more than 8 characters" })
 	.max(15, { message: "Password must be less than 15 characters" })
 	.regex(/[a-zA-Z]/, { message: "Contain at least one letter." })
-	.regex(/[0-9]/, { message: "Contain at least one number." })
+	// .regex(/[0-9]/, { message: "Contain at least one number." })
 	.regex(/[^a-zA-Z0-9]/, { message: "Contain at least one special character." })
 	.trim();
 
@@ -33,15 +33,21 @@ export const loginSchema = z.object({
 export const registerSchema = z.object({
 	email: emailField,
 });
-export const completeRegisterSchema = z.object({
-	name: nameField,
-	sponsorType: nameField,
-	email: emailField,
-	phoneNumber: phoneNumberField,
-	state: nameField,
-	password: passwordField,
-	confirmPassword: passwordField,
-});
+export const completeRegisterSchema = z
+	.object({
+		name: nameField,
+		sponsorType: z.string().min(1, "Sponsor Type is required"),
+		email: emailField,
+		phoneNumber: phoneNumberField,
+		state: nameField,
+		password: passwordField,
+		confirmPassword: passwordField,
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: "Passwords do not match",
+		path: ["confirmPassword"], // 👈 attach error to confirmPassword field
+	});
+
 // export const registerSchema = loginSchema.extend({
 // 	username: z.string().min(2, {
 // 	  message: "Username must be at least 2 characters.",

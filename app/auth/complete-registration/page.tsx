@@ -17,9 +17,13 @@ import { handleLoginAction } from "@/components/auth/actions/login";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, Loader2, LocateIcon, Lock, Mail, MapPin, Phone, Tag, User } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { registerBusiness } from "@/config/autth-actions";
+import { useRouter } from "next/navigation";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { statesOfNigeria } from "@/utils/constants";
 
 const metadata: Metadata = {
 	title: "Login & Create Account | SurveyPlus Sponsors Admin Dashboard",
@@ -27,6 +31,7 @@ const metadata: Metadata = {
 };
 
 const ConpleteRegistration = () => {
+	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
 	const [isPending, startTransition] = useTransition();
 	const { loading, setLoading } = useLoading();
@@ -45,34 +50,31 @@ const ConpleteRegistration = () => {
 		},
 	});
 
-	const onSubmit = (values: z.infer<typeof completeRegisterSchema>) => {
-		setLoading(true);
-
-		startTransition(async () => {
-			try {
-				if (!formRef.current) return;
-
-				const formData = new FormData(formRef.current);
-				const res = await handleLoginAction(formData);
-
-				if (res?.error) {
-					toast.error(res.error);
-				} else {
-					await signIn("credentials", {
-						redirect: true,
-						email: "wowdash@gmail.com",
-						password: "Pa$$w0rd!",
-						callbackUrl: "/dashboard",
-					});
-					toast.success("Signup successful!");
-				}
-			} catch (error) {
-				toast.error("Something went wrong. Please try again.");
-			} finally {
+	const onSubmit = async (values: z.infer<typeof completeRegisterSchema>) => {
+		const payload = {
+			full_name: values.name,
+			email: values.email,
+			password: values.password,
+			phone: values.phoneNumber,
+			state: values.state,
+			lga: "",
+		};
+		try {
+			setLoading(true);
+			const res = await registerBusiness(payload);
+			if (res) {
 				setLoading(false);
+				toast.success("Registration Successful");
+				setTimeout(() => {
+					router.push("/auth/login");
+					form.reset();
+				}, 500);
 			}
-		});
+		} catch (error) {
+			setLoading(false);
+		}
 	};
+
 	return (
 		<section className="p-10 bg-gradient-to-tr from-[#A81A4D] to-[#D4B4E3] min-h-screen w-full flex items-center justify-center">
 			<section className="bg-white dark:bg-slate-900 flex flex-wrap rounded-xl p-10 w-full">
@@ -91,7 +93,7 @@ const ConpleteRegistration = () => {
 						>
 							{/* Email Field */}
 							<div className="w-full">
-								<Label htmlFor="email" className="text-black dark:text-white mb-3">
+								<Label htmlFor="name" className="text-black dark:text-white mb-3">
 									Name:
 								</Label>
 								<FormField
@@ -101,7 +103,7 @@ const ConpleteRegistration = () => {
 										<FormItem>
 											<FormControl>
 												<div className="relative">
-													<Mail className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
+													<User className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
 													<Input
 														{...field}
 														type="name"
@@ -119,7 +121,7 @@ const ConpleteRegistration = () => {
 							</div>
 
 							<div className="w-full">
-								<Label htmlFor="email" className="text-black dark:text-white mb-3">
+								<Label htmlFor="sponsorType" className="text-black dark:text-white mb-3">
 									Sponsor Type:
 								</Label>
 								<FormField
@@ -129,7 +131,7 @@ const ConpleteRegistration = () => {
 										<FormItem>
 											<FormControl>
 												<div className="relative">
-													<Mail className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
+													<Tag className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
 													<Input
 														{...field}
 														type="sponsorType"
@@ -175,7 +177,7 @@ const ConpleteRegistration = () => {
 							</div>
 
 							<div className="w-full">
-								<Label htmlFor="email" className="text-black dark:text-white mb-3">
+								<Label htmlFor="phoneNumber" className="text-black dark:text-white mb-3">
 									Phone Number:
 								</Label>
 								<FormField
@@ -185,7 +187,7 @@ const ConpleteRegistration = () => {
 										<FormItem>
 											<FormControl>
 												<div className="relative">
-													<Mail className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
+													<Phone className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
 													<Input
 														{...field}
 														type="phoneNumber"
@@ -203,7 +205,7 @@ const ConpleteRegistration = () => {
 							</div>
 
 							<div className="w-full">
-								<Label htmlFor="email" className="text-black dark:text-white mb-3">
+								<Label htmlFor="state" className="text-black dark:text-white mb-3">
 									State:
 								</Label>
 								<FormField
@@ -213,15 +215,26 @@ const ConpleteRegistration = () => {
 										<FormItem>
 											<FormControl>
 												<div className="relative">
-													<Mail className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
-													<Input
-														{...field}
-														type="state"
-														placeholder="Lagos State"
-														name="state"
-														className="ps-13 pe-12 h-14 rounded-xl bg-neutral-100 dark:bg-slate-800 border border-neutral-300 dark:border-slate-700 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 !shadow-none !ring-0"
-														disabled={loading}
-													/>
+													<MapPin className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
+													<Select
+														onValueChange={field.onChange}
+														value={field.value}
+													>
+														<SelectTrigger className="w-full ps-13 pe-6 py-6 rounded-xl bg-neutral-100 dark:bg-slate-800 border border-neutral-300 dark:border-slate-700 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 !shadow-none !ring-0 cursor-pointer">
+															<SelectValue placeholder="Select a state" />
+														</SelectTrigger>
+														<SelectContent>
+															{statesOfNigeria.map((state) => (
+																<SelectItem
+																	className="cursor-pointer"
+																	key={state}
+																	value={state}
+																>
+																	{state}
+																</SelectItem>
+															))}
+														</SelectContent>
+													</Select>
 												</div>
 											</FormControl>
 											<FormMessage />
@@ -270,7 +283,7 @@ const ConpleteRegistration = () => {
 							</div>
 
 							<div className="w-full">
-								<Label htmlFor="password" className="text-black dark:text-white mb-3">
+								<Label htmlFor="confirmPassword" className="text-black dark:text-white mb-3">
 									Confirm Password
 								</Label>
 								<FormField

@@ -3,43 +3,42 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const publicRoutes = [
-  "/auth/login",
-  "/auth/register",
-  "/auth/forgot-password",
-  "/auth/create-password",
+	"/auth/login",
+	"/auth/register",
+	"/auth/forgot-password",
+	"/auth/create-password",
+	"/auth/complete-registration",
 ];
 
 export async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+	const { pathname } = req.nextUrl;
 
-  if (
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/favicon.ico") ||
-    pathname.startsWith("/api") ||
-    pathname.startsWith("/images") ||
-    pathname.startsWith("/manifest.json")
-  ) {
-    return NextResponse.next();
-  }
+	if (
+		pathname.startsWith("/_next") ||
+		pathname.startsWith("/favicon.ico") ||
+		pathname.startsWith("/api") ||
+		pathname.startsWith("/images") ||
+		pathname.startsWith("/manifest.json")
+	) {
+		return NextResponse.next();
+	}
 
-  let session = null;
+	let session = null;
 
-  try {
-    session = await auth();
-  } catch (error) {
-    return NextResponse.redirect(new URL("/auth/login", req.url));
-  }
+	try {
+		session = await auth();
+	} catch (error) {
+		return NextResponse.redirect(new URL("/auth/login", req.url));
+	}
 
-  const isPublic = publicRoutes.some((route) => pathname.startsWith(route));
+	const isPublic = publicRoutes.some((route) => pathname.startsWith(route));
 
-  if (!session?.user && !isPublic) {
-    return NextResponse.redirect(new URL("/auth/login", req.url));
-  }
+	if (!session?.user && !isPublic) {
+		return NextResponse.redirect(new URL("/auth/login", req.url));
+	}
 
-  return NextResponse.next();
+	return NextResponse.next();
 }
-
-
 
 // import { auth } from "./auth";
 // import { NextResponse } from "next/server";
@@ -56,12 +55,12 @@ export async function middleware(req: NextRequest) {
 //   const { pathname } = req.nextUrl;
 
 //   if (
-//     pathname.startsWith("/_next/") ||   
-//     pathname.startsWith("/static/") ||  
+//     pathname.startsWith("/_next/") ||
+//     pathname.startsWith("/static/") ||
 //     pathname.startsWith("/favicon.ico") ||
 //     pathname.startsWith("/robots.txt") ||
-//     pathname.startsWith("/api/") ||      
-//     pathname.startsWith("/public/")       
+//     pathname.startsWith("/api/") ||
+//     pathname.startsWith("/public/")
 //   ) {
 //     return NextResponse.next();
 //   }

@@ -17,8 +17,11 @@ import { loginSchema } from "@/lib/zod";
 import { useLoading } from "@/contexts/LoadingContext";
 import { handleLoginAction } from "./actions/login";
 import { Label } from "../ui/label";
+import { useRouter } from "next/navigation";
+import { loginUser } from "@/config/autth-actions";
 
 const LoginForm = () => {
+	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
 	const [isPending, startTransition] = useTransition();
 	const { loading, setLoading } = useLoading();
@@ -27,8 +30,8 @@ const LoginForm = () => {
 	const form = useForm<z.infer<typeof loginSchema>>({
 		resolver: zodResolver(loginSchema),
 		defaultValues: {
-			email: "wowdash@gmail.com",
-			password: "Pa$$w0rd!",
+			email: "",
+			password: "",
 		},
 	});
 
@@ -37,24 +40,26 @@ const LoginForm = () => {
 
 		startTransition(async () => {
 			try {
-				if (!formRef.current) return;
-
-				const formData = new FormData(formRef.current);
-				const res = await handleLoginAction(formData);
-
-				if (res?.error) {
-					toast.error(res.error);
-				} else {
-					toast.success("Login successful!");
-					await signIn("credentials", {
-						redirect: true,
-						email: values.email,
-						password: values.password,
-						callbackUrl: "/dashboard",
-					});
-				}
+				// const res = await loginUser({ email: values.email, password: values.password });
+				// console.log("login response", res);
+				// if (!res) {
+				// 	toast.error("Login failed...");
+				// 	return null;
+				// }
+				// if (res) {
+				// 	// console.log("login response", { res });
+				// 	toast.success(res.message ?? "Login Successful...");
+				// 	// router.push("/dashboard");
+				// 	return res.data;
+				// }
+				await signIn("credentials", {
+					redirect: true,
+					email: values.email,
+					password: values.password,
+					callbackUrl: "/dashboard",
+				});
 			} catch (error) {
-				toast.error("Something went wrong. Please try again.");
+				setLoading(false);
 			} finally {
 				setLoading(false);
 			}

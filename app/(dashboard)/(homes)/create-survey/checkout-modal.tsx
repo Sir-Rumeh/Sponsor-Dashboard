@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { statesOfNigeria } from "@/utils/constants";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -30,46 +31,6 @@ type FormValues = {
 	// administrationOption: string | any;
 	// incentiveAmount: number;
 };
-
-const statesOfNigeria = [
-	"Abia",
-	"Adamawa",
-	"Akwa Ibom",
-	"Anambra",
-	"Bauchi",
-	"Bayelsa",
-	"Benue",
-	"Borno",
-	"Cross River",
-	"Delta",
-	"Ebonyi",
-	"Edo",
-	"Ekiti",
-	"Enugu",
-	"FCT - Abuja",
-	"Gombe",
-	"Imo",
-	"Jigawa",
-	"Kaduna",
-	"Kano",
-	"Katsina",
-	"Kebbi",
-	"Kogi",
-	"Kwara",
-	"Lagos",
-	"Nasarawa",
-	"Niger",
-	"Ogun",
-	"Ondo",
-	"Osun",
-	"Oyo",
-	"Plateau",
-	"Rivers",
-	"Sokoto",
-	"Taraba",
-	"Yobe",
-	"Zamfara",
-];
 
 const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 	const searchParams = useSearchParams();
