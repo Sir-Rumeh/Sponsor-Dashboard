@@ -18,6 +18,8 @@ import { useLoading } from "@/contexts/LoadingContext";
 import { Label } from "../ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import LinkSentIcon from "@/public/assets/svgs/LinkSentIcon";
+import { verifyEmail } from "@/config/autth-actions";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 const RegisterForm = () => {
 	const router = useRouter();
@@ -34,13 +36,12 @@ const RegisterForm = () => {
 
 	const handleRegisterFormSubmit = async (values: z.infer<typeof registerSchema>) => {
 		setLoading(true);
-
-		toast.success("Verification email sent...");
-		setIsModalOpen(true);
-
-		setTimeout(() => {
+		const res = await verifyEmail(values);
+		if (res) {
 			setLoading(false);
-		}, 1000);
+			toast.success(res.message ?? "Verification email sent...");
+			setIsModalOpen(true);
+		}
 	};
 
 	return (
@@ -72,39 +73,6 @@ const RegisterForm = () => {
 							</FormItem>
 						)}
 					/>
-					{/* Password Field */}
-					{/* <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <div className="relative">
-                    <Lock className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
-                    <Input
-                      {...field}
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Password"
-                      className="ps-13 pe-12 h-14 rounded-xl bg-neutral-100 dark:bg-slate-800 border border-neutral-300 dark:border-slate-700 focus:border-blue-600 dark:focus:border-blue-600 focus-visible:border-blue-600 !shadow-none !ring-0"
-                      disabled={loading}
-                    />
-                    <Button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 !p-0 bg-transparent hover:bg-transparent text-muted-foreground h-[unset]"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="w-5 h-5" />
-                      ) : (
-                        <Eye className="w-5 h-5" />
-                      )}
-                    </Button>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
 
 					{/* Submit Button */}
 					<Button type="submit" className="w-full rounded-lg h-[52px] text-sm mt-2" disabled={loading}>
@@ -139,8 +107,17 @@ const RegisterForm = () => {
 			</div>
 
 			{
-				<Dialog open={isModalOpen} onOpenChange={() => setIsModalOpen(false)}>
+				<Dialog
+					open={isModalOpen}
+					onOpenChange={() => {
+						setIsModalOpen(false);
+						form.reset();
+					}}
+				>
 					<DialogContent className="sm:max-w-[600px] bg-white z-50 rounded-3xl pb-14 pt-10">
+						<DialogTitle>
+							<VisuallyHidden>Verification Sent</VisuallyHidden>
+						</DialogTitle>
 						<div className="mt-2 w-full flex items-center justify-center">
 							<LinkSentIcon />
 						</div>

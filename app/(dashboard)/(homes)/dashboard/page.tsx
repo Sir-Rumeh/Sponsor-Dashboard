@@ -27,6 +27,7 @@ import NoActiveSurveySVG from "@/public/assets/svgs/NoActiveSurvey";
 import CreateSurveyModal from "./create-survey-modal";
 import CustomDropdown from "../../components/custom-dropdown";
 import { useRouter } from "next/navigation";
+import SurveyResultModal from "./survey-result-modal";
 
 // export const metadata: Metadata = {
 // 	title: "SurveyPlus Sponsors Dashboard",
@@ -121,6 +122,7 @@ const getProgressBarColor = (responses: string) => {
 
 export default function DashboardPage() {
 	const [isCreateSurveyModal, setIsCreateSurveyModal] = useState<boolean>(false);
+	const [isSurveyResultModal, setIsSurveyResultModal] = useState<boolean>(false);
 	const router = useRouter();
 
 	const surveyTypes = [
@@ -132,7 +134,7 @@ export default function DashboardPage() {
 
 	return (
 		<>
-			<div className="bg-gray-100 min-h-screen px-6 xl:px-8">
+			<div className="bg-gray-100 min-h-screen px-6 xl:px-8 ">
 				<div className="flex flex-col">
 					<div className="w-full rounded-lg shadow-sm border border-primary/50 mt-6 bg-primary/6 px-8 py-4">
 						<h5 className="text-primary/80 dark:text-primary/80 ">Hi, Deeferent Media</h5>
@@ -234,8 +236,9 @@ export default function DashboardPage() {
 									) : (
 										mockSurveys.map((survey, index) => (
 											<TableRow
-												className="bg-white rounded-lg w-full py-4 flex items-center justify-start gap-5 relative"
+												className="bg-white rounded-lg w-full py-4 flex items-center justify-start gap-5 relative cursor-pointer"
 												key={index}
+												onClick={() => setIsSurveyResultModal(true)}
 											>
 												<TableCell className="">
 													<Button variant="ghost" size="icon">
@@ -316,6 +319,7 @@ export default function DashboardPage() {
 				</div>
 			</div>
 			<CreateSurveyModal isOpen={isCreateSurveyModal} onClose={() => setIsCreateSurveyModal(false)} />
+			<SurveyResultModal isOpen={isSurveyResultModal} onClose={() => setIsSurveyResultModal(false)} />
 		</>
 	);
 }
