@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import type { Metadata } from "next";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
@@ -28,6 +28,9 @@ import CreateSurveyModal from "./create-survey-modal";
 import CustomDropdown from "../../components/custom-dropdown";
 import { useRouter } from "next/navigation";
 import SurveyResultModal from "./survey-result-modal";
+import { useUser } from "@/contexts/UserContext";
+import { getLoggedInUser } from "@/config/auth-actions";
+import { getUserSurveys } from "@/config/survey-actions";
 
 // export const metadata: Metadata = {
 // 	title: "SurveyPlus Sponsors Dashboard",
@@ -41,7 +44,7 @@ interface Survey {
 	responses: string;
 	questions: number;
 	avgTime: string;
-	status: "Open" | "Closed" | "Draft";
+	status: number | "Open" | "Closed" | "Draft";
 }
 
 const mockSurveys: Survey[] = [
@@ -85,19 +88,19 @@ const mockSurveys: Survey[] = [
 
 const getStatusBadge = (status: Survey["status"]) => {
 	switch (status) {
-		case "Open":
+		case 1:
 			return (
 				<Badge className="bg-[#E2FFD9] text-[#249B00] rounded-tl-none rounded-tr-none rounded-bl-sm rounded-br-sm px-3 py-1 text-xs">
 					Open
 				</Badge>
 			);
-		case "Closed":
+		case 0:
 			return (
 				<Badge className="bg-[#FFDEDE] text-[#820000] rounded-tl-none rounded-tr-none rounded-bl-sm rounded-br-sm px-3 py-1 text-xs">
 					Closed
 				</Badge>
 			);
-		case "Draft":
+		case null:
 			return (
 				<Badge className="bg-[#FFF1DB] text-[#FF9D00] rounded-tl-none rounded-tr-none rounded-bl-sm rounded-br-sm px-3 py-1 text-xs">
 					Draft
@@ -112,17 +115,22 @@ const getStatusBadge = (status: Survey["status"]) => {
 	}
 };
 
-const getProgressBarColor = (responses: string) => {
-	const [completed, total] = responses.split("/").map((s) => parseInt(s, 10));
-	const percentage = (completed / total) * 100;
+const getProgressBarColor = (responses: number) => {
+	// const [completed, total] = responses.split("/").map((s) => parseInt(s, 10));
+	const percentage = (responses / 10) * 100;
 	if (percentage === 100) return "bg-[#8B1A10]";
 	if (percentage > 0) return "bg-[#249B00]";
 	return "bg-gray-200";
 };
 
 export default function DashboardPage() {
+	const { loggedInUser } = useUser();
+	const username = `${loggedInUser?.firstname + " " + loggedInUser?.lastname}`;
 	const [isCreateSurveyModal, setIsCreateSurveyModal] = useState<boolean>(false);
 	const [isSurveyResultModal, setIsSurveyResultModal] = useState<boolean>(false);
+	const [isSurveyLoading, setIsSurveyLoading] = useState<boolean>(false);
+	const [surveys, setSurveys] = useState<any[]>();
+	const [surveyId, setSurveyId] = useState<number | string>("");
 	const router = useRouter();
 
 	const surveyTypes = [
@@ -132,16 +140,36 @@ export default function DashboardPage() {
 		{ value: "draft", label: "Draft" },
 	];
 
+	useEffect(() => {
+		const fetchSurveys = async () => {
+			setIsSurveyLoading(true);
+			try {
+				const surveyList = await getUserSurveys(1);
+				setSurveys(surveyList.data.surveys);
+			} catch (err) {
+				console.error("Error fetching surveys:", err);
+			} finally {
+				setIsSurveyLoading(false);
+			}
+		};
+		fetchSurveys();
+	}, []);
+
 	return (
 		<>
 			<div className="bg-gray-100 min-h-screen px-6 xl:px-8 ">
 				<div className="flex flex-col">
 					<div className="w-full rounded-lg shadow-sm border border-primary/50 mt-6 bg-primary/6 px-8 py-4">
-						<h5 className="text-primary/80 dark:text-primary/80 ">Hi, Deeferent Media</h5>
+						<h5 className="text-primary/80 dark:text-primary/80 ">{`Hi, ${username ?? ""}`}</h5>
 						<div className="flex justify-between items-center">
 							<div className="flex flex-col gap-1">
-								<p>User Entity: Business</p>
-								<p>Email: deefrent@deefrent.com</p>
+								<p>
+									User Entity:{" "}
+									<span className="font-semibold">{loggedInUser?.sponsor_type}</span>{" "}
+								</p>
+								<p>
+									Email: <span className="font-semibold">{loggedInUser?.email}</span>{" "}
+								</p>
 							</div>
 							<div className="flex flex-col">
 								<Button
@@ -229,16 +257,19 @@ export default function DashboardPage() {
 						<div className="">
 							<Table>
 								<TableBody className="flex flex-col gap-y-5 bg-gray-100 ">
-									{!mockSurveys || mockSurveys.length < 1 ? (
+									{!surveys || surveys.length < 1 ? (
 										<div className="flex items-center w-full justify-center mt-[10%]">
 											<NoActiveSurveySVG />
 										</div>
 									) : (
-										mockSurveys.map((survey, index) => (
+										surveys.map((survey, index) => (
 											<TableRow
 												className="bg-white rounded-lg w-full py-4 flex items-center justify-start gap-5 relative cursor-pointer"
 												key={index}
-												onClick={() => setIsSurveyResultModal(true)}
+												onClick={() => {
+													setSurveyId(survey.id);
+													setIsSurveyResultModal(true);
+												}}
 											>
 												<TableCell className="">
 													<Button variant="ghost" size="icon">
@@ -247,12 +278,14 @@ export default function DashboardPage() {
 												</TableCell>
 												<TableCell className="font-medium min-w-[400px]">
 													<div className="flex flex-col items-start gap-2 font-bold">
-														<div className="flex items-center justify-between w-full">
-															<h6 className="text-lg">{survey.title}</h6>
+														<span className="flex items-center justify-between w-full">
+															<h6 className="text-lg">
+																{survey.survey_name}
+															</h6>
 															<button className="scale-70 cursor-pointer">
 																<EditIconSVG />
 															</button>
-														</div>
+														</span>
 														<span className="text-gray-500 font-normal text-xs">
 															Created on {survey.created} | Modified{" "}
 															{survey.modified}
@@ -263,7 +296,7 @@ export default function DashboardPage() {
 												<TableCell className="w-full flex items-center justify-end py-6">
 													<div className="flex items-center gap-2 justify-end ">
 														<span className="text-gray-500 font-normal">
-															{survey.responses}
+															{survey.responses}/10
 														</span>
 														<div className="h-3 w-40 bg-gray-200 rounded-full">
 															<div
@@ -272,16 +305,8 @@ export default function DashboardPage() {
 																)}`}
 																style={{
 																	width: `${
-																		(parseInt(
-																			survey.responses.split(
-																				"/"
-																			)[0]
-																		) /
-																			parseInt(
-																				survey.responses.split(
-																					"/"
-																				)[1]
-																			)) *
+																		(parseInt(survey.responses) /
+																			10) *
 																		100
 																	}%`,
 																}}
@@ -291,12 +316,14 @@ export default function DashboardPage() {
 												</TableCell>
 												<div className="px-3 py-8 border-r border-foreground/40"></div>
 												<TableCell className="w-full flex flex-col items-center justify-center">
-													<p className="text-xl font-bold">{survey.questions}</p>
+													<p className="text-xl font-bold">
+														{survey.num_questions}
+													</p>
 													<p className='text-gray-500 font-normal"'>Questions</p>
 												</TableCell>
 												<div className="px-3 py-8 border-r border-foreground/40"></div>
 												<TableCell className="w-full flex flex-col items-center justify-center">
-													<p className=" text-xl font-bold">{survey.avgTime}</p>
+													<p className=" text-xl font-bold">{survey.avg_time}</p>
 													<p className='text-gray-500 font-normal"'>
 														Average time spent
 													</p>
@@ -319,7 +346,11 @@ export default function DashboardPage() {
 				</div>
 			</div>
 			<CreateSurveyModal isOpen={isCreateSurveyModal} onClose={() => setIsCreateSurveyModal(false)} />
-			<SurveyResultModal isOpen={isSurveyResultModal} onClose={() => setIsSurveyResultModal(false)} />
+			<SurveyResultModal
+				surveyId={surveyId}
+				isOpen={isSurveyResultModal}
+				onClose={() => setIsSurveyResultModal(false)}
+			/>
 		</>
 	);
 }

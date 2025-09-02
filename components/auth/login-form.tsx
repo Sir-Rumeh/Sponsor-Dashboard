@@ -18,7 +18,7 @@ import { useLoading } from "@/contexts/LoadingContext";
 import { handleLoginAction } from "./actions/login";
 import { Label } from "../ui/label";
 import { useRouter } from "next/navigation";
-import { loginUser } from "@/config/autth-actions";
+import { loginUser } from "@/config/auth-actions";
 
 const LoginForm = () => {
 	const router = useRouter();

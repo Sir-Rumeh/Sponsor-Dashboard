@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Loader2, LocateIcon, Lock, Mail, MapPin, Phone, Tag, User } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { registerBusiness } from "@/config/autth-actions";
+import { registerBusiness } from "@/config/auth-actions";
 import { useRouter } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { sponsorTypes, statesOfNigeria } from "@/utils/constants";
@@ -57,6 +57,7 @@ const ConpleteRegistration = () => {
 			password: values.password,
 			phone: values.phoneNumber,
 			state: values.state,
+			sponsor_type: values.sponsorType,
 			lga: "",
 		};
 		try {

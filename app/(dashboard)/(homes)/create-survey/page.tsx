@@ -26,6 +26,7 @@ import CheckoutIcon from "@/public/assets/svgs/CheckoutIcon";
 import CustomDropdown from "../../components/custom-dropdown";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import CheckoutModal from "./checkout-modal";
+import toast from "react-hot-toast";
 
 // export const metadata: Metadata = {
 // 	title: "Create Survey - SurveyPlus",
@@ -125,6 +126,30 @@ const CreateSurveyPage = () => {
 		);
 	};
 
+	const handleValidateQuestions = (questions: Question[]): boolean => {
+		let isValid = true;
+
+		for (const q of questions) {
+			if (!q.questionText.trim()) {
+				toast.error(
+					<span>
+						Question <strong>#{q.id}</strong> is missing a question text
+					</span>
+				);
+				isValid = false;
+			}
+			if (!q.answerText.trim()) {
+				toast.error(
+					<span>
+						Question <strong>#{q.id}</strong> is missing an answer text
+					</span>
+				);
+				isValid = false;
+			}
+		}
+		return isValid;
+	};
+
 	// const handleDeleteQuestion = (id: number) => {
 	// 	setQuestions(questions.filter((question) => question.id !== id));
 	// };
@@ -171,7 +196,11 @@ const CreateSurveyPage = () => {
 							<ImportIcon className="scale-150 " /> Import template
 						</Button>
 						<Button
-							onClick={() => setIsCheckoutModal(true)}
+							onClick={() => {
+								const questionsValid = handleValidateQuestions(questions);
+								if (!questionsValid) return;
+								setIsCheckoutModal(true);
+							}}
 							className="flex items-center p-5 gap-2 bg-primary hover:bg-primary/90 text-white text-md"
 						>
 							<CheckoutIcon /> Proceed to checkout
@@ -304,7 +333,6 @@ const CreateSurveyPage = () => {
 																	);
 																}}
 																className="flex-1 border-gray-300 border-0 border-t-0 border-l-0 border-r-0 rounded-none focus:ring-0 disabled:opacity-100"
-																disabled
 															/>
 															{(question.options?.length ?? 0) > 1 && (
 																<Button

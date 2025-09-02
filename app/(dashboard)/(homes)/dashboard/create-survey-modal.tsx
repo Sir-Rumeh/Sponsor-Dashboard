@@ -7,8 +7,12 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { createSurvey } from "@/config/survey-actions";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 interface CreateSurveyModalProps {
 	isOpen: boolean;
@@ -23,6 +27,7 @@ type FormValues = {
 };
 
 const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({ isOpen, onClose }) => {
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 	const {
 		register,
@@ -33,9 +38,34 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({ isOpen, onClose }
 
 	const adminOption = watch("administrationOption");
 
-	const handleConductSurvey = (data: FormValues) => {
-		console.log(data);
-		router.push(`/create-survey?from=dashboard&surveyName=${encodeURIComponent(data.surveyName)}`);
+	const handleConductSurvey = async (data: FormValues) => {
+		const payload = {
+			name: data.surveyName,
+			respondent_type:
+				data.administrationOption?.trim().toLocaleLowerCase() ===
+				"Will Recruit Respondents and Administer Survey to them".trim().toLocaleLowerCase()
+					? "unassigned"
+					: "assigned",
+			respondent_incentive_amount:
+				data.administrationOption?.trim().toLocaleLowerCase() ===
+				"Will Recruit Respondents and Administer Survey to them".trim().toLocaleLowerCase()
+					? data.incentiveAmount
+					: 0,
+			sample_needed: data.numberOfRespondents,
+		};
+		try {
+			setIsLoading(true);
+			const res = await createSurvey(payload);
+			if (res) {
+				setIsLoading(false);
+				toast.success("Survey created successfully");
+				setTimeout(() => {
+					router.push(`/create-survey?from=dashboard&surveyName=${encodeURIComponent(data.surveyName)}`);
+				}, 500);
+			}
+		} catch (error) {
+			setIsLoading(false);
+		}
 	};
 
 	const handleCloseModal = () => {
@@ -154,7 +184,14 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({ isOpen, onClose }
 							type="submit"
 							className="mt-6 bg-primary hover:bg-primary/90 text-white cursor-pointer px-8 rounded-sm"
 						>
-							Conduct Suvery
+							{isLoading ? (
+								<>
+									<Loader2 className="animate-spin h-4.5 w-4.5 mr-2" />
+									Adding Survey...
+								</>
+							) : (
+								"Conduct Survey"
+							)}
 						</Button>
 					</form>
 				</DialogContent>

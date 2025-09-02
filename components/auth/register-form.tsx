@@ -18,7 +18,7 @@ import { useLoading } from "@/contexts/LoadingContext";
 import { Label } from "../ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import LinkSentIcon from "@/public/assets/svgs/LinkSentIcon";
-import { verifyEmail } from "@/config/autth-actions";
+import { verifyEmail } from "@/config/auth-actions";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 const RegisterForm = () => {

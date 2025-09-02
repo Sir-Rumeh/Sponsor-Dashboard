@@ -2,10 +2,10 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
-import { getUserFromDb } from "./utils/db";
+// import { getUserFromDb } from "./utils/db";
 import { loginSchema } from "./lib/zod";
 import { ZodError } from "zod";
-import { loginUser } from "./config/autth-actions";
+import { loginUser } from "./config/auth-actions";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -23,6 +23,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 						email,
 						password,
 					});
+					// const userResponse = await axios.get("http://162.243.168.52:8000/api/user", {
+					// 	headers: {
+					// 		Authorization: `Token ${response.data.token}`,
+					// 	},
+					// });
+					// console.log("userresponse", userResponse);
 					const user = { id: response.data.token, email: response.data.token };
 					return user;
 				} catch (error) {

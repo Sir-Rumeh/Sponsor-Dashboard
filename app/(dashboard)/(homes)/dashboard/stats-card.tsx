@@ -17,43 +17,48 @@ interface StatItem {
 	chartId: string;
 }
 
-const stats: StatItem[] = [
-	{
-		id: "Total Respondents",
-		title: "Total Respondents",
-		value: "25%",
-		change: "5",
-		changeColor: "success",
-		gradientFrom: "from-purple-600/10",
-		bgCircle: "#8252e9",
-		icon: BarChart3,
-		chartId: "conversion-user-chart",
-	},
-	{
-		id: "Average Time Spent",
-		title: "Average Time Spent",
-		value: "2.5 mins",
-		change: "2.5 mins",
-		changeColor: "success",
-		gradientFrom: "from-pink-600/10",
-		bgCircle: "#de3ace",
-		icon: AverageTimeIcon,
-		chartId: "leads-chart",
-	},
-	{
-		id: "Completion Rate",
-		title: "Completion Rate",
-		value: "90%",
-		change: "90%",
-		changeColor: "success",
-		gradientFrom: "from-cyan-600/10",
-		bgCircle: "#00b8f2",
-		icon: TrendingUp,
-		chartId: "total-profit-chart",
-	},
-];
-
-const StatsCard = () => {
+const StatsCard = ({
+	totalRespondents,
+	neededRespondents,
+}: {
+	totalRespondents: number;
+	neededRespondents: number;
+}) => {
+	const stats: StatItem[] = [
+		{
+			id: "Total Respondents",
+			title: "Total Respondents",
+			value: totalRespondents?.toString(),
+			change: "5",
+			changeColor: "success",
+			gradientFrom: "from-purple-600/10",
+			bgCircle: "#8252e9",
+			icon: BarChart3,
+			chartId: "conversion-user-chart",
+		},
+		{
+			id: "Average Time Spent",
+			title: "Average Time Spent",
+			value: "2.5 mins",
+			change: "2.5 mins",
+			changeColor: "success",
+			gradientFrom: "from-pink-600/10",
+			bgCircle: "#de3ace",
+			icon: AverageTimeIcon,
+			chartId: "leads-chart",
+		},
+		{
+			id: "Completion Rate",
+			title: "Completion Rate",
+			value: `${((totalRespondents / neededRespondents) * 100)?.toString()}%`,
+			change: "90%",
+			changeColor: "success",
+			gradientFrom: "from-cyan-600/10",
+			bgCircle: "#00b8f2",
+			icon: TrendingUp,
+			chartId: "total-profit-chart",
+		},
+	];
 	return (
 		<>
 			{stats.map((item) => {

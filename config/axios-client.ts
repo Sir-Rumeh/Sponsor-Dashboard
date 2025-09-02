@@ -1,10 +1,13 @@
-import { auth } from "@/auth";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { getSession } from "next-auth/react";
 
 const AxiosClient = axios.create({
 	baseURL: process.env.NEXT_PUBLIC_SERVER_BASE_URL,
-	headers: { "Content-Type": "application/json" },
+	headers: {
+		"Content-Type": "application/json",
+		Accept: "application/json",
+	},
 });
 
 AxiosClient.interceptors.request.use(
@@ -13,9 +16,9 @@ AxiosClient.interceptors.request.use(
 			throw new Error("Please check your Internet Connection");
 		}
 		try {
-			const session = await auth();
+			const session = await getSession();
 			if (session) {
-				const token = session.user?.id;
+				const token = session.user?.email;
 				request.headers.Authorization = `Token ${token}`;
 			}
 		} catch (error) {

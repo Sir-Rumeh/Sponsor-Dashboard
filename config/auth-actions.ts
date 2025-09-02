@@ -36,3 +36,26 @@ export const loginUser = async (payload: AgentLoginInterface): Promise<any> => {
 		throw error;
 	}
 };
+
+export const getLoggedInUser = async (): Promise<any> => {
+	const url = "/api/user";
+	try {
+		const response: AxiosResponse<any> = await AxiosClient.get(url);
+		return response.data;
+	} catch (error) {
+		console.error("Fetching user failed:", error);
+		throw error;
+	}
+};
+
+// export const getUserById = async (id: string): Promise<any> => {
+//   try {
+//     const response: AxiosResponse<any> = await AxiosClient.get("/api/user", {
+//       params: { id }, // axios automatically converts to ?id=123
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error("Fetching user by id failed:", error);
+//     throw error;
+//   }
+// };
