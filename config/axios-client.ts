@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -10,6 +11,15 @@ AxiosClient.interceptors.request.use(
 	async (request) => {
 		if (!navigator.onLine) {
 			throw new Error("Please check your Internet Connection");
+		}
+		try {
+			const session = await auth();
+			if (session) {
+				const token = session.user?.id;
+				request.headers.Authorization = `Token ${token}`;
+			}
+		} catch (error) {
+			console.log("error:", error);
 		}
 		return request;
 	},
@@ -30,15 +40,15 @@ AxiosClient.interceptors.response.use(
 	async (error) => {
 		console.log("error response", error?.response);
 		if (error?.response?.status === 400) {
-			toast.error(error?.response?.data.message ?? "Request failed");
+			toast.error(error?.response?.data?.error ?? "Request failed");
 		} else if (error?.response?.status === 401) {
+			toast.error("Your session timed out, sign in again to continue");
+			return Promise.reject(error);
 			// dispatch(logout());
 			// dispatch(uiStopLoading());
-			toast.error("Your session timed out, sign in again to continue");
-			window.location.href = "/";
-			return Promise.reject(error);
+			// window.location.href = "/";
 		} else if (error?.response?.status === 404) {
-			toast.error(error?.response?.message);
+			toast.error(error?.response?.data?.error);
 			return Promise.reject(error);
 		} else if (error?.response?.status === 500) {
 			// dispatch(uiStopLoading());
@@ -46,7 +56,7 @@ AxiosClient.interceptors.response.use(
 			return Promise.reject(error);
 		} else {
 			//  dispatch(uiStopLoading());
-			toast.error(error?.response?.data?.Message ? error.response.data.Message : "Something went wrong");
+			toast.error(error?.response?.data?.error ? error.response.data.error : "Something went wrong");
 			return Promise.reject(error);
 		}
 	}

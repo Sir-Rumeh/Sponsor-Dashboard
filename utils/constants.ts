@@ -37,3 +37,9 @@ export const statesOfNigeria = [
 	"Yobe",
 	"Zamfara",
 ];
+export const sponsorTypes = [
+	"Business Organization",
+	"Governmental/Non Governmental Organization",
+	"Academic Institution",
+	"Individual",
+];

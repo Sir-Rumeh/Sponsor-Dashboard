@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { registerBusiness } from "@/config/autth-actions";
 import { useRouter } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { statesOfNigeria } from "@/utils/constants";
+import { sponsorTypes, statesOfNigeria } from "@/utils/constants";
 
 const metadata: Metadata = {
 	title: "Login & Create Account | SurveyPlus Sponsors Admin Dashboard",
@@ -132,14 +132,35 @@ const ConpleteRegistration = () => {
 											<FormControl>
 												<div className="relative">
 													<Tag className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
-													<Input
+													<Select
+														onValueChange={field.onChange}
+														value={field.value}
+													>
+														<SelectTrigger className="w-full ps-13 pe-6 py-6 rounded-xl bg-neutral-100 dark:bg-slate-800 border border-neutral-300 dark:border-slate-700 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 !shadow-none !ring-0 cursor-pointer">
+															<SelectValue placeholder="Select sponsor type" />
+														</SelectTrigger>
+														<SelectContent>
+															{sponsorTypes.map((type) => (
+																<SelectItem
+																	className="cursor-pointer"
+																	key={type}
+																	value={type}
+																>
+																	{type}
+																</SelectItem>
+															))}
+														</SelectContent>
+													</Select>
+
+													{/*  */}
+													{/* <Input
 														{...field}
 														type="sponsorType"
 														placeholder="Business Organisation"
 														name="sponsorType"
 														className="ps-13 pe-12 h-14 rounded-xl bg-neutral-100 dark:bg-slate-800 border border-neutral-300 dark:border-slate-700 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 !shadow-none !ring-0"
 														disabled={loading}
-													/>
+													/> */}
 												</div>
 											</FormControl>
 											<FormMessage />

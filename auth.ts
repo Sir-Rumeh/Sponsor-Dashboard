@@ -23,7 +23,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 						email,
 						password,
 					});
-					const user = response.data;
+					const user = { id: response.data.token, email: response.data.token };
 					return user;
 				} catch (error) {
 					if (error instanceof ZodError) {
