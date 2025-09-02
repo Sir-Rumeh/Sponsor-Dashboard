@@ -23,3 +23,11 @@ interface CreateSurveyInterface {
 	respondent_incentive_amount: number;
 	sample_needed: number;
 }
+interface AddSurveyQuestionsInterface {
+	question: string;
+	category: string;
+	question_type: string;
+	options: string;
+	survey_id: number;
+	screening_type: string;
+}

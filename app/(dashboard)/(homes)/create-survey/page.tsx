@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import type { Metadata } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,6 +27,7 @@ import CustomDropdown from "../../components/custom-dropdown";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import CheckoutModal from "./checkout-modal";
 import toast from "react-hot-toast";
+import { addQuestionToSurvey, viewSurveyDetails } from "@/config/survey-actions";
 
 // export const metadata: Metadata = {
 // 	title: "Create Survey - SurveyPlus",
@@ -46,8 +47,13 @@ const CreateSurveyPage = () => {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const from = searchParams.get("from");
-	const surveyName = searchParams.get("surveyName");
-	const [surveyTitle, setSurveyTitle] = useState(surveyName);
+	const id = searchParams.get("surveyId");
+	const surveyId = parseInt(id || "");
+	const [surveyTitle, setSurveyTitle] = useState();
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [surveyDetails, setSurveyDetails] = useState<any>();
+	const [category, setCategory] = useState<string>("");
+	const [loadingStates, setLoadingStates] = useState<{ [key: number]: boolean }>({});
 	const [questions, setQuestions] = useState<Question[]>([
 		{
 			id: 1,
@@ -128,7 +134,7 @@ const CreateSurveyPage = () => {
 
 	const handleValidateQuestions = (questions: Question[]): boolean => {
 		let isValid = true;
-
+		// const questionsToValidate = questions.slice(0, -1);
 		for (const q of questions) {
 			if (!q.questionText.trim()) {
 				toast.error(
@@ -149,14 +155,75 @@ const CreateSurveyPage = () => {
 		}
 		return isValid;
 	};
+	const handleValidateQuestion = (questions: Question[], id: number): boolean => {
+		let isValid = true;
+		const q = questions.find((question) => question.id === id);
 
-	// const handleDeleteQuestion = (id: number) => {
-	// 	setQuestions(questions.filter((question) => question.id !== id));
-	// };
+		if (!q) {
+			toast.error(`Question with id ${id} not found`);
+			return false;
+		}
 
-	// const handleQuestionChange = (id: number, field: keyof Question, value: any) => {
-	// 	setQuestions(questions.map((question) => (question.id === id ? { ...question, [field]: value } : question)));
-	// };
+		if (!q.questionText.trim()) {
+			toast.error(
+				<span>
+					Question <strong>#{q.id}</strong> is missing a question text
+				</span>
+			);
+			isValid = false;
+		}
+
+		if (!q.answerText.trim()) {
+			toast.error(
+				<span>
+					Question <strong>#{q.id}</strong> is missing an answer text
+				</span>
+			);
+			isValid = false;
+		}
+
+		return isValid;
+	};
+
+	const handleAddQuestionToSurvey = async (question: Question) => {
+		setLoadingStates((prev) => ({ ...prev, [question.id]: true }));
+		const questionsValid = handleValidateQuestion(questions, question.id);
+		if (!questionsValid) return;
+		const payload = {
+			question: question.questionText,
+			category,
+			question_type: question.type.toLowerCase().replace(/\s+/g, "_"),
+			options: question?.options?.join(",") || "",
+			survey_id: surveyId || 0,
+			screening_type: "",
+		};
+		try {
+			const res = await addQuestionToSurvey(payload);
+			if (res) {
+				setIsLoading(false);
+				toast.success("Question added successfully");
+			}
+		} catch (error) {
+			setLoadingStates((prev) => ({ ...prev, [question.id]: false }));
+		} finally {
+			setLoadingStates((prev) => ({ ...prev, [question.id]: false }));
+		}
+	};
+
+	useEffect(() => {
+		const fetchSurveyDetails = async () => {
+			try {
+				const res = surveyId && (await viewSurveyDetails(surveyId));
+				setSurveyTitle(res.data.survey_name);
+				setSurveyDetails(res.data);
+			} catch (err) {
+				console.error("Error fetching surveys:", err);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		fetchSurveyDetails();
+	}, [surveyId]);
 
 	const modeTypes = [
 		{ value: "Questionaire mode", label: "Questionaire Mode" },
@@ -218,13 +285,18 @@ const CreateSurveyPage = () => {
 						>
 							Preview
 						</Button>
-						<CustomDropdown
-							options={modeTypes}
-							placeholder="Questionaire Mode"
-							selectTriggerClasses="w-[200px] text-white border border-white px-5 dark:border-white focus:border-white dark:focus:border-white focus-visible:border-white h-12 rounded-sm !shadow-none !ring-0"
-							defaultValue="Questionaire mode"
-							// onValueChange={(value: any) => handleModeChange(1, "type", value)}
-						/>
+						<Select onValueChange={setCategory} value={category}>
+							<SelectTrigger className="cursor-pointer w-[200px] text-white border border-white px-5 dark:border-white focus:border-white dark:focus:border-white focus-visible:border-white h-12 rounded-sm !shadow-none !ring-0">
+								<SelectValue placeholder="Questionaire Mode" />
+							</SelectTrigger>
+							<SelectContent>
+								{modeTypes.map((mode) => (
+									<SelectItem className="cursor-pointer" key={mode.label} value={mode.value}>
+										{mode.label}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
 					</div>
 				</div>
 
@@ -233,7 +305,10 @@ const CreateSurveyPage = () => {
 					<Card className="py-6 px-8 rounded-bl-lg wounded-br-lg rounded-tl-none rounded-tr-none shadow-md bg-white w-full">
 						<CardContent className="p-0">
 							{questions.map((question, index) => (
-								<div key={question.id} className="mb-6 last:mb-0">
+								<div
+									key={question.id}
+									className={`mb-6 last:mb-0 ${questions.length - 1 === index && ""}`}
+								>
 									<p className=" text-black text-lg mb-2 font-bold">
 										{index + 1} of {questions.length} Questions
 									</p>
@@ -294,72 +369,97 @@ const CreateSurveyPage = () => {
 											{(question.type === "Radio mode" ||
 												question.type === "Checkbox" ||
 												question.type === "Dropdown") && (
-												<div className="space-y-4">
-													{question.options?.map((option, optionIndex) => (
-														<div
-															key={optionIndex}
-															className="flex items-center gap-2 relative focus:border-primary border-b"
-														>
-															{question.type === "Radio mode" && (
-																<input
-																	type="radio"
-																	name={`radio-${question.id}`}
-																	className="h-4 w-4 text-primary focus:ring-primary border-gray-300 accent-primary cursor-pointer"
-																/>
-															)}
-															{question.type === "Checkbox" && (
-																<input
-																	type="checkbox"
-																	className="h-4 w-4 text-primary focus:ring-primary rounded border-gray-300 accent-primary cursor-pointer"
-																/>
-															)}
-															{question.type === "Dropdown" && (
-																<SelectPrimitive.Icon asChild>
-																	<ChevronDownIcon className="size-4 text-primary" />
-																</SelectPrimitive.Icon>
-															)}
-															<Input
-																value={option}
-																onChange={(e) => {
-																	const newOptions = [
-																		...(question.options || []),
-																	];
-																	newOptions[optionIndex] =
-																		e.target.value;
-																	handleQuestionChange(
-																		question.id,
-																		"options",
-																		newOptions
-																	);
-																}}
-																className="flex-1 border-gray-300 border-0 border-t-0 border-l-0 border-r-0 rounded-none focus:ring-0 disabled:opacity-100"
-															/>
-															{(question.options?.length ?? 0) > 1 && (
-																<Button
-																	variant="ghost"
-																	onClick={() =>
-																		handleDeleteOption(
+												<>
+													<div className="space-y-4">
+														{question.options?.map((option, optionIndex) => (
+															<div
+																key={optionIndex}
+																className="flex items-center gap-2 relative focus:border-primary border-b"
+															>
+																{question.type === "Radio mode" && (
+																	<input
+																		type="radio"
+																		name={`radio-${question.id}`}
+																		className="h-4 w-4 text-primary focus:ring-primary border-gray-300 accent-primary cursor-pointer"
+																	/>
+																)}
+																{question.type === "Checkbox" && (
+																	<input
+																		type="checkbox"
+																		className="h-4 w-4 text-primary focus:ring-primary rounded border-gray-300 accent-primary cursor-pointer"
+																	/>
+																)}
+																{question.type === "Dropdown" && (
+																	<SelectPrimitive.Icon asChild>
+																		<ChevronDownIcon className="size-4 text-primary" />
+																	</SelectPrimitive.Icon>
+																)}
+																<Input
+																	value={option}
+																	onChange={(e) => {
+																		const newOptions = [
+																			...(question.options ||
+																				[]),
+																		];
+																		newOptions[optionIndex] =
+																			e.target.value;
+																		handleQuestionChange(
 																			question.id,
-																			optionIndex
-																		)
-																	}
-																	className="h-2 w-2 py-3 text-red-500 hover:bg-red-100 absolute right-0 "
-																>
-																	<Trash2 className="h-4 w-4" />
-																</Button>
-															)}
-														</div>
-													))}
-													<Button
-														variant="outline"
-														onClick={() => handleAddOption(question.id)}
-														className="w-auto flex items-center gap-2 bg-primary/5 border-0 hover:text-prim text-primary hover:bg-primary/10"
-													>
-														<Plus className="h-5 w-5 bg-primary/8 rounded-8" />{" "}
-														Add options
-													</Button>
-												</div>
+																			"options",
+																			newOptions
+																		);
+																	}}
+																	className="flex-1 border-gray-300 border-0 border-t-0 border-l-0 border-r-0 rounded-none focus:ring-0 disabled:opacity-100"
+																/>
+																{(question.options?.length ?? 0) >
+																	1 && (
+																	<Button
+																		variant="ghost"
+																		onClick={() =>
+																			handleDeleteOption(
+																				question.id,
+																				optionIndex
+																			)
+																		}
+																		className="h-2 w-2 py-3 text-red-500 hover:bg-red-100 absolute right-0 "
+																	>
+																		<Trash2 className="h-4 w-4" />
+																	</Button>
+																)}
+															</div>
+														))}
+														<Button
+															variant="outline"
+															onClick={() => handleAddOption(question.id)}
+															className="w-auto flex items-center gap-2 bg-primary/5 border-0 hover:text-prim text-primary hover:bg-primary/10"
+														>
+															<Plus className="h-5 w-5 bg-primary/8 rounded-8" />{" "}
+															Add options
+														</Button>
+													</div>
+												</>
 											)}
+											<div className="flex justify-end items-center gap-4 mt-3">
+												{questions.length > 1 && (
+													<Button
+														onClick={() =>
+															handleDeleteQuestion(
+																questions[questions.length - 1].id
+															)
+														}
+														variant="outline"
+														className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:border-none"
+													>
+														<Trash2 className="h-4 w-4" /> Delete
+													</Button>
+												)}
+												<Button
+													onClick={() => handleAddQuestionToSurvey(question)}
+													className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white"
+												>
+													<Plus className="h-4 w-4" /> Add to survey
+												</Button>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -368,21 +468,11 @@ const CreateSurveyPage = () => {
 						{/* Bottom Buttons Section */}
 
 						<div className="flex justify-end items-center gap-4 mt-3">
-							{questions.length > 1 && (
-								<Button
-									onClick={() => handleDeleteQuestion(questions[questions.length - 1].id)}
-									variant="outline"
-									className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:border-none"
-								>
-									<Trash2 className="h-4 w-4" /> Delete
-								</Button>
-							)}
-
 							<Button
 								onClick={handleAddQuestion}
 								className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white"
 							>
-								<Plus className="h-4 w-4" /> Add question
+								<Plus className="h-4 w-4" /> Add New question
 							</Button>
 						</div>
 					</Card>

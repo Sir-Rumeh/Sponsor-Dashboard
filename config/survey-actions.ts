@@ -49,3 +49,13 @@ export const createSurvey = async (payload: CreateSurveyInterface): Promise<any>
 		throw error;
 	}
 };
+export const addQuestionToSurvey = async (payload: AddSurveyQuestionsInterface): Promise<any> => {
+	const url = "/api/add-questions";
+	try {
+		const response: AxiosResponse<any> = await AxiosClient.post(url, payload);
+		return response;
+	} catch (error) {
+		console.error("Add question to survey failed:", error);
+		throw error;
+	}
+};

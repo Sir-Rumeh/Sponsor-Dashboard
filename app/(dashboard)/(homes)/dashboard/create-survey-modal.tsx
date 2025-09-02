@@ -58,9 +58,9 @@ const CreateSurveyModal: React.FC<CreateSurveyModalProps> = ({ isOpen, onClose }
 			const res = await createSurvey(payload);
 			if (res) {
 				setIsLoading(false);
-				toast.success("Survey created successfully");
+				toast.success(res.data.message ?? "Survey created successfully");
 				setTimeout(() => {
-					router.push(`/create-survey?from=dashboard&surveyName=${encodeURIComponent(data.surveyName)}`);
+					router.push(`/create-survey?from=dashboard&surveyId=${encodeURIComponent(res.data.id)}`);
 				}, 500);
 			}
 		} catch (error) {
