@@ -9,14 +9,18 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { editSurveyGender } from "@/config/survey-actions";
 import { statesOfNigeria } from "@/utils/constants";
+import { Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 interface CheckoutModalProps {
 	isOpen: boolean;
 	onClose: () => void;
+	surveyId: number;
 }
 
 interface SurveyProperty {
@@ -32,7 +36,7 @@ type FormValues = {
 	// incentiveAmount: number;
 };
 
-const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
+const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, surveyId }) => {
 	const searchParams = useSearchParams();
 	const surveyName = searchParams.get("surveyName");
 	const router = useRouter();
@@ -55,6 +59,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 	const [surveyProperties, setSurveyProperties] = useState<SurveyProperty[]>(initialSurveyProperties);
 	const [editingProperty, setEditingProperty] = useState<SurveyProperty | null>(null);
 	const [editedValue, setEditedValue] = useState<string>("");
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const handleEditClick = (prop: SurveyProperty) => {
 		setEditingProperty(prop);
@@ -65,9 +70,57 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 		setEditingProperty(null);
 	};
 
-	const handleSave = () => {
-		if (!editingProperty) return;
+	const saveEditedValues = async (prop: SurveyProperty) => {
+		setIsLoading(true);
+		try {
+			switch (prop.property) {
+				case "Gender": {
+					const res = await editSurveyGender({ id: surveyId, gender: editedValue });
+					if (res) {
+						toast.success(res.data.message);
+					}
+				}
+				case "State": {
+					const res = await editSurveyGender({ id: surveyId, gender: editedValue });
+					if (res) {
+						toast.success(res.data.message);
+					}
+				}
+				case "Settlement": {
+					const res = await editSurveyGender({ id: surveyId, gender: editedValue });
+					if (res) {
+						toast.success(res.data.message);
+					}
+				}
+				case "Monthly Income": {
+					const res = await editSurveyGender({ id: surveyId, gender: editedValue });
+					if (res) {
+						toast.success(res.data.message);
+					}
+				}
+				case "Age group": {
+					const res = await editSurveyGender({ id: surveyId, gender: editedValue });
+					if (res) {
+						toast.success(res.data.message);
+					}
+				}
+				case "Education": {
+					const res = await editSurveyGender({ id: surveyId, gender: editedValue });
+					if (res) {
+						toast.success(res.data.message);
+					}
+				}
+			}
+		} catch (error) {
+			setIsLoading(false);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
+	const handleSave = async () => {
+		if (!editingProperty) return;
+		saveEditedValues(editingProperty);
 		const updatedProperties = surveyProperties.map((prop) =>
 			prop.id === editingProperty.id ? { ...prop, value: editedValue } : prop
 		);
@@ -363,13 +416,13 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 						className="flex flex-col items-center gap-5 py-2"
 					>
 						<div className="w-full flex flex-col gap-1 space-y-2">
-							<h2 className="text-lg font-semibold text-gray-700">Survey Details</h2>
+							<h2 className="text-lg font-semibold text-gray-900">Survey Details</h2>
 							<div className="flex items-center space-x-2">
-								<p className="text-gray-900 font-semibold">Survey name:</p>
+								<p className=" text-gray-700 font-semibold">Survey name:</p>
 								<span className="text-gray-600">{surveyName}</span>
 							</div>
 							<div className="flex items-center space-x-2">
-								<p className="text-gray-900 font-semibold">Question limit:</p>
+								<p className=" text-gray-700 font-semibold">Question limit:</p>
 								<span className="text-gray-600">5</span>
 							</div>
 						</div>
@@ -459,7 +512,14 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
 							onClick={handleSave}
 							className="bg-primary hover:bg-primary/90 text-white cursor-pointer"
 						>
-							Save
+							{isLoading ? (
+								<>
+									<Loader2 className="animate-spin h-4.5 w-4.5 mr-2" />
+									Saving...
+								</>
+							) : (
+								<>Save</>
+							)}
 						</Button>
 					</DialogFooter>
 				</DialogContent>

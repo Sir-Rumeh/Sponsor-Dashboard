@@ -17,6 +17,7 @@ import {
 	CheckCircle,
 	XCircle,
 	ChevronDownIcon,
+	Loader2,
 } from "lucide-react";
 import ArrowBackIcon from "@/public/assets/svgs/ArrowBackIcon";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -53,7 +54,8 @@ const CreateSurveyPage = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [surveyDetails, setSurveyDetails] = useState<any>();
 	const [category, setCategory] = useState<string>("");
-	const [loadingStates, setLoadingStates] = useState<{ [key: number]: boolean }>({});
+	const [addToSurveyloadingStates, setAddToSurveyloadingStates] = useState<{ [key: number]: boolean }>({});
+	const [addedQuestionIds, setAddedQuestionIds] = useState<number[]>([]);
 	const [questions, setQuestions] = useState<Question[]>([
 		{
 			id: 1,
@@ -186,7 +188,6 @@ const CreateSurveyPage = () => {
 	};
 
 	const handleAddQuestionToSurvey = async (question: Question) => {
-		setLoadingStates((prev) => ({ ...prev, [question.id]: true }));
 		const questionsValid = handleValidateQuestion(questions, question.id);
 		if (!questionsValid) return;
 		const payload = {
@@ -197,16 +198,20 @@ const CreateSurveyPage = () => {
 			survey_id: surveyId || 0,
 			screening_type: "",
 		};
+		setAddToSurveyloadingStates((prev) => ({ ...prev, [question.id]: true }));
 		try {
 			const res = await addQuestionToSurvey(payload);
 			if (res) {
-				setIsLoading(false);
+				setAddToSurveyloadingStates((prev) => ({ ...prev, [question.id]: false }));
+				setAddedQuestionIds((prev) => [...prev, question.id]);
 				toast.success("Question added successfully");
+				console.log(res.data.id);
+				// Do something with the res question id
 			}
 		} catch (error) {
-			setLoadingStates((prev) => ({ ...prev, [question.id]: false }));
+			setAddToSurveyloadingStates((prev) => ({ ...prev, [question.id]: false }));
 		} finally {
-			setLoadingStates((prev) => ({ ...prev, [question.id]: false }));
+			setAddToSurveyloadingStates((prev) => ({ ...prev, [question.id]: false }));
 		}
 	};
 
@@ -456,8 +461,21 @@ const CreateSurveyPage = () => {
 												<Button
 													onClick={() => handleAddQuestionToSurvey(question)}
 													className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white"
+													disabled={addedQuestionIds.includes(question.id)}
 												>
-													<Plus className="h-4 w-4" /> Add to survey
+													{addedQuestionIds.includes(question.id) ? (
+														"Added to survey"
+													) : addToSurveyloadingStates[question.id] ? (
+														<>
+															<Loader2 className="animate-spin h-4.5 w-4.5 mr-2" />
+															Adding...
+														</>
+													) : (
+														<>
+															<Plus className="h-4 w-4" />
+															Add to survey
+														</>
+													)}
 												</Button>
 											</div>
 										</div>
@@ -478,7 +496,7 @@ const CreateSurveyPage = () => {
 					</Card>
 				</div>
 			</div>
-			<CheckoutModal isOpen={isCheckoutModal} onClose={() => setIsCheckoutModal(false)} />
+			<CheckoutModal isOpen={isCheckoutModal} onClose={() => setIsCheckoutModal(false)} surveyId={surveyId} />
 		</>
 	);
 };
