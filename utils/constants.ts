@@ -43,3 +43,31 @@ export const sponsorTypes = [
 	"Academic Institution",
 	"Individual",
 ];
+export const monthlyIncomeOptions = [
+	"Not currently working, someone else pays my bills",
+	"Earn less than N30,000 monthly",
+	"Earn between N30,001 and N100,000 monthly",
+	"Earn above N100,000 monthly",
+];
+export const ageGroupOptions = [
+	"18 - 24 years",
+	"25 - 34 years",
+	"35 - 44 years",
+	"45 - 54 years",
+	"55 - 64 years",
+	"Above 65 years",
+];
+export const educationOptions = [
+	"Pre-school",
+	"Primary incomplete",
+	"Primary complete",
+	"Secondary incomplete",
+	"Secondary complete",
+	"University/Polytechnic Undergraduate",
+	"University/Polytechnic OND complete",
+	"University/Polytechnic HND complete",
+	"Post-university incomplete",
+	"Post-university complete",
+	"Non-formal education (e.g. Arabic/Quranic education)",
+	"No education",
+];

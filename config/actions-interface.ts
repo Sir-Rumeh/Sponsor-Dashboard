@@ -34,7 +34,7 @@ interface EditSurveyGenderInterface {
 }
 interface EditSurveyStateInterface {
 	id: number;
-	gender: string;
+	state: string;
 }
 interface EditSurveySettlementInterface {
 	id: number;
@@ -42,7 +42,7 @@ interface EditSurveySettlementInterface {
 }
 interface EditSurveyAgeGroupInterface {
 	id: number;
-	settlement: string;
+	age_group: string;
 }
 interface EditSurveyMonthlyIncomeInterface {
 	id: number;

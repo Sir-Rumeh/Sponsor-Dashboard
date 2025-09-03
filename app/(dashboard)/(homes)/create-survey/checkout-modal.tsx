@@ -3,14 +3,22 @@
 "use clinet";
 import CustomDropdown from "@/app/(dashboard)/components/custom-dropdown";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { editSurveyGender } from "@/config/survey-actions";
-import { statesOfNigeria } from "@/utils/constants";
+import {
+	editSurveyAgeGroup,
+	editSurveyEducation,
+	editSurveyGender,
+	editSurveyMonthlyIncome,
+	editSurveySettlement,
+	editSurveyState,
+} from "@/config/survey-actions";
+import { ageGroupOptions, educationOptions, monthlyIncomeOptions, statesOfNigeria } from "@/utils/constants";
 import { Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -77,37 +85,37 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, surveyId
 				case "Gender": {
 					const res = await editSurveyGender({ id: surveyId, gender: editedValue });
 					if (res) {
-						toast.success(res.data.message);
+						return toast.success(res.message);
 					}
 				}
 				case "State": {
-					const res = await editSurveyGender({ id: surveyId, gender: editedValue });
+					const res = await editSurveyState({ id: surveyId, state: editedValue });
 					if (res) {
-						toast.success(res.data.message);
+						return toast.success(res.message);
 					}
 				}
 				case "Settlement": {
-					const res = await editSurveyGender({ id: surveyId, gender: editedValue });
+					const res = await editSurveySettlement({ id: surveyId, settlement: editedValue });
 					if (res) {
-						toast.success(res.data.message);
+						return toast.success(res.message);
 					}
 				}
 				case "Monthly Income": {
-					const res = await editSurveyGender({ id: surveyId, gender: editedValue });
+					const res = await editSurveyMonthlyIncome({ id: surveyId, montly_income: editedValue });
 					if (res) {
-						toast.success(res.data.message);
+						return toast.success(res.message);
 					}
 				}
 				case "Age group": {
-					const res = await editSurveyGender({ id: surveyId, gender: editedValue });
+					const res = await editSurveyAgeGroup({ id: surveyId, age_group: editedValue });
 					if (res) {
-						toast.success(res.data.message);
+						return toast.success(res.message);
 					}
 				}
 				case "Education": {
-					const res = await editSurveyGender({ id: surveyId, gender: editedValue });
+					const res = await editSurveyEducation({ id: surveyId, education: editedValue });
 					if (res) {
-						toast.success(res.data.message);
+						return toast.success(res.message);
 					}
 				}
 			}
@@ -128,8 +136,21 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, surveyId
 		handleDialogClose();
 	};
 
+	const handleCheckboxChange = (value: string, isChecked: boolean) => {
+		const currentArray = editedValue.split(",").filter((item) => item !== "");
+		if (isChecked) {
+			if (!currentArray.includes(value)) {
+				setEditedValue([...currentArray, value].join(","));
+			}
+		} else {
+			setEditedValue(currentArray.filter((item) => item !== value).join(","));
+		}
+	};
+
 	// Helper function to render the correct dialog content based on property type
 	const renderEditContent = (property: string) => {
+		const currentValueArray = editedValue.split(",").filter((item) => item !== "");
+
 		switch (property) {
 			case "Gender":
 				return (
@@ -156,22 +177,38 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, surveyId
 				);
 			case "State":
 				return (
-					// This is a placeholder for a more complex component, e.g., a multi-select dropdown
-					<Select onValueChange={setEditedValue} value={editedValue}>
-						<SelectTrigger className="w-full cursor-pointer">
-							<SelectValue placeholder="Select a state" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem className="cursor-pointer" value="All states">
-								All states
-							</SelectItem>
-							{statesOfNigeria.map((state) => (
-								<SelectItem className="cursor-pointer" key={state} value={state}>
-									{state}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
+					<div className="flex flex-col gap-2 max-h-60 overflow-y-auto pr-2">
+						<div className="flex items-center space-x-2">
+							<Checkbox
+								id="all-states"
+								checked={
+									currentValueArray.includes("All states") ||
+									(statesOfNigeria.length > 0 &&
+										currentValueArray.length === statesOfNigeria.length)
+								}
+								onCheckedChange={(isChecked: boolean) => {
+									if (isChecked) {
+										setEditedValue(statesOfNigeria.join(","));
+									} else {
+										setEditedValue("");
+									}
+								}}
+							/>
+							<Label htmlFor="all-states">All states</Label>
+						</div>
+						{statesOfNigeria.map((state) => (
+							<div key={state} className="flex items-center space-x-2">
+								<Checkbox
+									id={state}
+									checked={currentValueArray.includes(state)}
+									onCheckedChange={(isChecked: boolean) =>
+										handleCheckboxChange(state, isChecked)
+									}
+								/>
+								<Label htmlFor={state}>{state}</Label>
+							</div>
+						))}
+					</div>
 				);
 			case "Settlement":
 				return (
@@ -198,191 +235,108 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, surveyId
 				);
 			case "Monthly Income":
 				return (
-					<RadioGroup onValueChange={setEditedValue} value={editedValue}>
+					<div className="flex flex-col gap-2">
 						<div className="flex items-center space-x-2">
-							<RadioGroupItem
-								className="cursor-pointer"
-								value="All income levels"
-								id="all-income"
+							<Checkbox
+								id="all-income-levels"
+								checked={
+									currentValueArray.includes("All income levels") ||
+									(monthlyIncomeOptions.length > 0 &&
+										currentValueArray.length === monthlyIncomeOptions.length)
+								}
+								onCheckedChange={(isChecked: boolean) => {
+									if (isChecked) {
+										setEditedValue(monthlyIncomeOptions.join(","));
+									} else {
+										setEditedValue("");
+									}
+								}}
 							/>
-							<Label className="cursor-pointer" htmlFor="all-income">
-								All Income level
-							</Label>
+							<Label htmlFor="all-income-levels">All income levels</Label>
 						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem
-								className="cursor-pointer"
-								value="Not currently working, someone else pays my bills"
-								id="not-working"
-							/>
-							<Label className="cursor-pointer" htmlFor="not-working">
-								Not currently working, someone else pays my bills
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem
-								className="cursor-pointer"
-								value="Earn less than N30,000 monthly"
-								id="less-than-30k"
-							/>
-							<Label className="cursor-pointer" htmlFor="less-than-30k">
-								Earn less than N30,000 monthly
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem
-								className="cursor-pointer"
-								value="Earn between N30,001 and N100,000 monthly"
-								id="30k-to-100k"
-							/>
-							<Label className="cursor-pointer" htmlFor="30k-to-100k">
-								Earn between N30,001 and N100,000 monthly
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem
-								className="cursor-pointer"
-								value="Earn above N100,000 monthly"
-								id="above-100k"
-							/>
-							<Label className="cursor-pointer" htmlFor="above-100k">
-								Earn above N100,000 monthly
-							</Label>
-						</div>
-					</RadioGroup>
+						{monthlyIncomeOptions.map((option) => (
+							<div key={option} className="flex items-center space-x-2">
+								<Checkbox
+									id={option}
+									checked={currentValueArray.includes(option)}
+									onCheckedChange={(isChecked: boolean) =>
+										handleCheckboxChange(option, isChecked)
+									}
+								/>
+								<Label htmlFor={option}>{option}</Label>
+							</div>
+						))}
+					</div>
 				);
 			case "Age group":
 				return (
-					<RadioGroup onValueChange={setEditedValue} value={editedValue}>
+					<div className="flex flex-col gap-2">
 						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="All age groups" id="all-age-groups" />
-							<Label className="cursor-pointer" htmlFor="all-age-groups">
-								All age groups
-							</Label>
+							<Checkbox
+								id="all-age-group"
+								checked={
+									currentValueArray.includes("All age groups") ||
+									(ageGroupOptions.length > 0 &&
+										currentValueArray.length === ageGroupOptions.length)
+								}
+								onCheckedChange={(isChecked: boolean) => {
+									if (isChecked) {
+										setEditedValue(ageGroupOptions.join(","));
+									} else {
+										setEditedValue("");
+									}
+								}}
+							/>
+							<Label htmlFor="all-age-group">All age groups</Label>
 						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="18 - 24 years" id="18-24" />
-							<Label className="cursor-pointer" htmlFor="18-24">
-								18 - 24 years
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="25 - 34 years" id="25-34" />
-							<Label className="cursor-pointer" htmlFor="25-34">
-								25 - 34 years
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="35 - 44 years" id="35-44" />
-							<Label className="cursor-pointer" htmlFor="35-44">
-								35 - 44 years
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="45 - 54 years" id="45-54" />
-							<Label className="cursor-pointer" htmlFor="45-54">
-								45 - 54 years
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="55 - 64 years" id="55-64" />
-							<Label className="cursor-pointer" htmlFor="55-64">
-								55 - 64 years
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="Above 65 years" id="above-65" />
-							<Label className="cursor-pointer" htmlFor="above-65">
-								Above 65 years
-							</Label>
-						</div>
-					</RadioGroup>
+						{ageGroupOptions.map((option) => (
+							<div key={option} className="flex items-center space-x-2">
+								<Checkbox
+									id={option}
+									checked={currentValueArray.includes(option)}
+									onCheckedChange={(isChecked: boolean) =>
+										handleCheckboxChange(option, isChecked)
+									}
+								/>
+								<Label htmlFor={option}>{option}</Label>
+							</div>
+						))}
+					</div>
 				);
 			case "Education":
 				return (
-					<RadioGroup onValueChange={setEditedValue} value={editedValue}>
+					<div className="flex flex-col gap-2 max-h-60 overflow-y-auto pr-2">
 						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="All levels" id="all-levels" />
-							<Label className="cursor-pointer" htmlFor="all-levels">
-								All levels
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="Pre-school" id="pre-school" />
-							<Label className="cursor-pointer" htmlFor="pre-school">
-								Pre-school
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="Primary incomplete" id="primary-incomplete" />
-							<Label className="cursor-pointer" htmlFor="primary-incomplete">
-								Primary incomplete
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="Primary complete" id="primary-complete" />
-							<Label className="cursor-pointer" htmlFor="primary-complete">
-								Primary complete
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="Secondary incomplete" id="secondary-incomplete" />
-							<Label className="cursor-pointer" htmlFor="secondary-incomplete">
-								Secondary incomplete
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="Secondary complete" id="secondary-complete" />
-							<Label className="cursor-pointer" htmlFor="secondary-complete">
-								Secondary complete
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="University/Polytechnic Undergraduate" id="uni-undergrad" />
-							<Label className="cursor-pointer" htmlFor="uni-undergrad">
-								University/Polytechnic Undergraduate
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="University/Polytechnic OND complete" id="uni-ond" />
-							<Label className="cursor-pointer" htmlFor="uni-ond">
-								University/Polytechnic OND complete
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="University/Polytechnic HND complete" id="uni-hnd" />
-							<Label className="cursor-pointer" htmlFor="uni-hnd">
-								University/Polytechnic HND complete
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="Post-university incomplete" id="post-uni-incomplete" />
-							<Label className="cursor-pointer" htmlFor="post-uni-incomplete">
-								Post-university incomplete
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="Post-university complete" id="post-uni-complete" />
-							<Label className="cursor-pointer" htmlFor="post-uni-complete">
-								Post-university complete
-							</Label>
-						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem
-								value="Non-formal education (e.g. Arabic/Quranic education)"
-								id="non-formal"
+							<Checkbox
+								id="all-levels"
+								checked={
+									currentValueArray.includes("All levels") ||
+									(educationOptions.length > 0 &&
+										currentValueArray.length === educationOptions.length)
+								}
+								onCheckedChange={(isChecked: boolean) => {
+									if (isChecked) {
+										setEditedValue(educationOptions.join(","));
+									} else {
+										setEditedValue("");
+									}
+								}}
 							/>
-							<Label className="cursor-pointer" htmlFor="non-formal">
-								Non-formal education (e.g. Arabic/Quranic education)
-							</Label>
+							<Label htmlFor="all-levels">All levels</Label>
 						</div>
-						<div className="flex items-center space-x-2">
-							<RadioGroupItem value="No education" id="no-education" />
-							<Label className="cursor-pointer" htmlFor="no-education">
-								No education
-							</Label>
-						</div>
-					</RadioGroup>
+						{educationOptions.map((option) => (
+							<div key={option} className="flex items-center space-x-2">
+								<Checkbox
+									id={option}
+									checked={currentValueArray.includes(option)}
+									onCheckedChange={(isChecked: boolean) =>
+										handleCheckboxChange(option, isChecked)
+									}
+								/>
+								<Label htmlFor={option}>{option}</Label>
+							</div>
+						))}
+					</div>
 				);
 			default:
 				return <p>Editing not available for this property.</p>;
@@ -442,14 +396,26 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, surveyId
 										</TableHead>
 									</TableRow>
 								</TableHeader>
-								<TableBody className="border ">
+								<TableBody className="border">
 									{surveyProperties.map((prop) => (
 										<TableRow className="h-14 px-2" key={prop.id}>
 											<TableCell className="font-medium text-gray-800 border-0">
 												{prop.property}
 											</TableCell>
 											<TableCell className="text-gray-600 border-0 whitespace-normal break-words">
-												{prop.value}
+												{prop.property === "State" &&
+												prop.value === statesOfNigeria.join(",")
+													? "All states"
+													: prop.property === "Monthly Income" &&
+													  prop.value === monthlyIncomeOptions.join(",")
+													? "All income levels"
+													: prop.property === "Age Group" &&
+													  prop.value === ageGroupOptions.join(",")
+													? "All age groups"
+													: prop.property === "Education" &&
+													  prop.value === educationOptions.join(",")
+													? "All education levels"
+													: prop.value}
 											</TableCell>
 											<TableCell className="text-right border-0">
 												<Button
