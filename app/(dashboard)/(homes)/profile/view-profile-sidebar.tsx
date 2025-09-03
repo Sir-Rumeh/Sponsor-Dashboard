@@ -4,8 +4,10 @@ import { handleProfileUpdate } from "./actions/handleProfileUpdate";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import AvatarUpload from "./avatar-upload";
+import { useUser } from "@/contexts/UserContext";
 
 const ViewProfileSidebar = () => {
+	const { loggedInUser } = useUser();
 	return (
 		<div className="user-grid-card relative border border-slate-200 dark:border-slate-600 rounded-2xl overflow-hidden bg-white dark:bg-[#273142] h-full">
 			<div
@@ -16,9 +18,8 @@ const ViewProfileSidebar = () => {
 					<div className="flex justify-center items-center relative">
 						<AvatarUpload />
 					</div>
-
-					<h6 className="mb-0 mt-4">Robiul Hasan</h6>
-					<span className="text-secondary-light mb-4">ifrandom@gmail.com</span>
+					<h6 className="mb-0 mt-4">{`${loggedInUser?.account_num}`}</h6>
+					<span className="text-secondary-light mb-4">{`${loggedInUser?.email}`}</span>
 				</div>
 			</div>
 
@@ -43,9 +44,8 @@ const ViewProfileSidebar = () => {
 														name="name"
 														type="text"
 														id="name"
-														value={"Robiul Hasan"}
+														value={`${loggedInUser?.firstname} ${loggedInUser?.lastname}`}
 														placeholder="Enter Full Name"
-														disabled
 														className="disabled:bg-gray-100 disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
 													/>
 												</div>
@@ -62,7 +62,7 @@ const ViewProfileSidebar = () => {
 														name="sponsorType"
 														type="text"
 														id="sponsorType"
-														value={"Business Orgamization"}
+														value={`${loggedInUser?.sponsor_type}`}
 														placeholder="Enter Sponsor Type"
 														disabled
 														className="disabled:bg-gray-100 disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
@@ -81,7 +81,7 @@ const ViewProfileSidebar = () => {
 														name="email"
 														type="text"
 														id="email"
-														value={"Deefrent@deefrent.com"}
+														value={` ${loggedInUser?.email}`}
 														placeholder="Enter Email"
 														disabled
 														className="disabled:bg-gray-100 disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
@@ -100,7 +100,7 @@ const ViewProfileSidebar = () => {
 														name="number"
 														type="tel"
 														id="number"
-														value={"+234 80 8745 2365"}
+														value={` ${loggedInUser?.phone_number}`}
 														placeholder="Enter phone number"
 														disabled
 														className="disabled:bg-gray-100 disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
@@ -119,8 +119,27 @@ const ViewProfileSidebar = () => {
 														name="state"
 														type="text"
 														id="state"
-														value={"Lagos State"}
+														value={`${loggedInUser?.state}`}
 														placeholder="Enter State"
+														disabled
+														className="disabled:bg-gray-100 disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
+													/>
+												</div>
+											</div>
+											<div className="w-full max-w-xl">
+												<div className="mb-5">
+													<Label
+														htmlFor="state"
+														className="text-black dark:text-white mb-3"
+													>
+														Lga:
+													</Label>
+													<Input
+														name="lga"
+														type="text"
+														id="lga"
+														value={`${loggedInUser?.lga}`}
+														placeholder="Enter Lga"
 														disabled
 														className="disabled:bg-gray-100 disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
 													/>

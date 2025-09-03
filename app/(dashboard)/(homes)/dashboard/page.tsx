@@ -116,7 +116,6 @@ const getStatusBadge = (status: Survey["status"]) => {
 };
 
 const getProgressBarColor = (responses: number) => {
-	// const [completed, total] = responses.split("/").map((s) => parseInt(s, 10));
 	const percentage = (responses / 10) * 100;
 	if (percentage === 100) return "bg-[#8B1A10]";
 	if (percentage > 0) return "bg-[#249B00]";
