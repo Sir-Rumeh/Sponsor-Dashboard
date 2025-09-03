@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { registerBusiness } from "@/config/auth-actions";
 import { useRouter } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { sponsorTypes, statesOfNigeria } from "@/utils/constants";
+import { lgasOfNigeria, sponsorTypes, statesOfNigeria } from "@/utils/constants";
 
 const metadata: Metadata = {
 	title: "Login & Create Account | SurveyPlus Sponsors Admin Dashboard",
@@ -45,6 +45,7 @@ const ConpleteRegistration = () => {
 			email: "",
 			phoneNumber: "",
 			state: "",
+			lga: "",
 			password: "",
 			confirmPassword: "",
 		},
@@ -58,7 +59,7 @@ const ConpleteRegistration = () => {
 			phone: values.phoneNumber,
 			state: values.state,
 			sponsor_type: values.sponsorType,
-			lga: "",
+			lga: values.lga,
 		};
 		try {
 			setLoading(true);
@@ -75,6 +76,11 @@ const ConpleteRegistration = () => {
 			setLoading(false);
 		}
 	};
+
+	const { control, watch } = form;
+	// Watch the value of the 'state' field
+	const selectedState = watch("state");
+	const availableLgas = selectedState ? lgasOfNigeria[selectedState] || [] : [];
 
 	return (
 		<section className="p-10 bg-gradient-to-tr from-[#A81A4D] to-[#D4B4E3] min-h-screen w-full flex items-center justify-center">
@@ -152,16 +158,6 @@ const ConpleteRegistration = () => {
 															))}
 														</SelectContent>
 													</Select>
-
-													{/*  */}
-													{/* <Input
-														{...field}
-														type="sponsorType"
-														placeholder="Business Organisation"
-														name="sponsorType"
-														className="ps-13 pe-12 h-14 rounded-xl bg-neutral-100 dark:bg-slate-800 border border-neutral-300 dark:border-slate-700 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 !shadow-none !ring-0"
-														disabled={loading}
-													/> */}
 												</div>
 											</FormControl>
 											<FormMessage />
@@ -239,7 +235,10 @@ const ConpleteRegistration = () => {
 												<div className="relative">
 													<MapPin className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
 													<Select
-														onValueChange={field.onChange}
+														onValueChange={(value) => {
+															field.onChange(value);
+															form.setValue("lga", "");
+														}}
 														value={field.value}
 													>
 														<SelectTrigger className="w-full ps-13 pe-6 py-6 rounded-xl bg-neutral-100 dark:bg-slate-800 border border-neutral-300 dark:border-slate-700 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 !shadow-none !ring-0 cursor-pointer">
@@ -255,6 +254,52 @@ const ConpleteRegistration = () => {
 																	{state}
 																</SelectItem>
 															))}
+														</SelectContent>
+													</Select>
+												</div>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+
+							<div className="w-full">
+								<Label htmlFor="lga" className="text-black dark:text-white mb-3">
+									LGA:
+								</Label>
+								<FormField
+									control={form.control}
+									name="lga"
+									render={({ field }) => (
+										<FormItem>
+											<FormControl>
+												<div className="relative">
+													<MapPin className="absolute start-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-700 dark:text-neutral-200" />
+													<Select
+														onValueChange={field.onChange}
+														value={field.value}
+														disabled={!form.getValues("state")}
+													>
+														<SelectTrigger className="w-full ps-13 pe-6 py-6 rounded-xl bg-neutral-100 dark:bg-slate-800 border border-neutral-300 dark:border-slate-700 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 !shadow-none !ring-0 cursor-pointer">
+															<SelectValue placeholder="Select an LGA" />
+														</SelectTrigger>
+														<SelectContent>
+															{availableLgas.length > 0 ? (
+																availableLgas.map((lga) => (
+																	<SelectItem
+																		className="cursor-pointer"
+																		key={lga}
+																		value={lga}
+																	>
+																		{lga}
+																	</SelectItem>
+																))
+															) : (
+																<SelectItem disabled value="no_lga">
+																	No LGAs found
+																</SelectItem>
+															)}
 														</SelectContent>
 													</Select>
 												</div>

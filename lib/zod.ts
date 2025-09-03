@@ -40,6 +40,7 @@ export const completeRegisterSchema = z
 		email: emailField,
 		phoneNumber: phoneNumberField,
 		state: nameField,
+		lga: nameField,
 		password: passwordField,
 		confirmPassword: passwordField,
 	})
