@@ -19,6 +19,7 @@ import { handleLoginAction } from "./actions/login";
 import { Label } from "../ui/label";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/config/auth-actions";
+import axios from "axios";
 
 const LoginForm = () => {
 	const router = useRouter();
@@ -40,18 +41,11 @@ const LoginForm = () => {
 
 		startTransition(async () => {
 			try {
-				// const res = await loginUser({ email: values.email, password: values.password });
-				// console.log("login response", res);
-				// if (!res) {
-				// 	toast.error("Login failed...");
-				// 	return null;
-				// }
-				// if (res) {
-				// 	// console.log("login response", { res });
-				// 	toast.success(res.message ?? "Login Successful...");
-				// 	// router.push("/dashboard");
-				// 	return res.data;
-				// }
+				// const response = await axios.post(`http://162.243.168.52:8000/v1/auth/login`, {
+				// 	email: values.email,
+				// 	password: values.password,
+				// });
+				// console.log(response.data.token);
 				await signIn("credentials", {
 					redirect: true,
 					email: values.email,

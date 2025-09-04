@@ -56,6 +56,7 @@ const CreateSurveyPage = () => {
 	const [category, setCategory] = useState<string>("");
 	const [addToSurveyloadingStates, setAddToSurveyloadingStates] = useState<{ [key: number]: boolean }>({});
 	const [addedQuestionIds, setAddedQuestionIds] = useState<number[]>([]);
+	const [numberOfQuestions, setNumberOfQuestions] = useState<number>(0);
 	const [questions, setQuestions] = useState<Question[]>([
 		{
 			id: 1,
@@ -217,11 +218,13 @@ const CreateSurveyPage = () => {
 
 	useEffect(() => {
 		const fetchSurveyDetails = async () => {
+			setIsLoading(true);
 			try {
 				const res = surveyId && (await viewSurveyDetails(surveyId));
 				setSurveyTitle(res.data.survey_name);
 				setSurveyDetails(res.data);
 			} catch (err) {
+				setIsLoading(false);
 				console.error("Error fetching surveys:", err);
 			} finally {
 				setIsLoading(false);
@@ -229,6 +232,10 @@ const CreateSurveyPage = () => {
 		};
 		fetchSurveyDetails();
 	}, [surveyId]);
+
+	useEffect(() => {
+		setNumberOfQuestions(questions.length);
+	}, [questions]);
 
 	const modeTypes = [
 		{ value: "Questionaire mode", label: "Questionaire Mode" },
@@ -496,7 +503,12 @@ const CreateSurveyPage = () => {
 					</Card>
 				</div>
 			</div>
-			<CheckoutModal isOpen={isCheckoutModal} onClose={() => setIsCheckoutModal(false)} surveyId={surveyId} />
+			<CheckoutModal
+				isOpen={isCheckoutModal}
+				onClose={() => setIsCheckoutModal(false)}
+				surveyId={surveyId}
+				numberOfQuestions={numberOfQuestions}
+			/>
 		</>
 	);
 };

@@ -199,21 +199,21 @@ export default function DashboardPage() {
 						</Card>
 
 						<Card className="bg-primary/6 rounded-lg shadow-sm border border-primary/50 py-5 px-3 flex flex-row  justify-center items-center text-center ">
-							<div className="flex flex-col justify-center items-center text-center border-r border-foreground/40 px-12">
+							<div className="flex flex-col justify-center items-center text-center border-r border-foreground/40 px-12 lg:px-14">
 								<CardTitle className="text-2xl font-bold mt-2 text-[#249B00]">10</CardTitle>
 								<CardDescription className="text-sm font-medium text-gray-500">
 									Open
 								</CardDescription>
 							</div>
 
-							<div className="flex flex-col justify-center items-center text-center border-r border-foreground/40 px-12">
+							<div className="flex flex-col justify-center items-center text-center border-r border-foreground/40 px-12 lg:px-14">
 								<CardTitle className="text-2xl font-bold mt-2 text-[#8B1A10]">32</CardTitle>
 								<CardDescription className="text-sm font-medium text-gray-500">
 									Closed
 								</CardDescription>
 							</div>
 
-							<div className="flex flex-col justify-center items-center text-center px-12">
+							<div className="flex flex-col justify-center items-center text-center px-12 lg:px-14">
 								<CardTitle className="text-2xl font-bold mt-2 text-[#FF9D00]">8</CardTitle>
 								<CardDescription className="text-sm font-medium text-gray-500">
 									Drafts

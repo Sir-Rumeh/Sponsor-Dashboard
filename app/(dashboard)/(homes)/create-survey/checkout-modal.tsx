@@ -17,11 +17,14 @@ import {
 	editSurveyMonthlyIncome,
 	editSurveySettlement,
 	editSurveyState,
+	getSurveyPropertyDetails,
 } from "@/config/survey-actions";
+import { useUser } from "@/contexts/UserContext";
 import { ageGroupOptions, educationOptions, monthlyIncomeOptions, statesOfNigeria } from "@/utils/constants";
+import { getPriceForQuestions } from "@/utils/questionRange";
 import { Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -29,6 +32,7 @@ interface CheckoutModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	surveyId: number;
+	numberOfQuestions: number;
 }
 
 interface SurveyProperty {
@@ -39,12 +43,9 @@ interface SurveyProperty {
 
 type FormValues = {
 	// surveyName: string;
-	// numberOfRespondents: number;
-	// administrationOption: string | any;
-	// incentiveAmount: number;
 };
 
-const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, surveyId }) => {
+const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, surveyId, numberOfQuestions }) => {
 	const searchParams = useSearchParams();
 	const surveyName = searchParams.get("surveyName");
 	const router = useRouter();
@@ -54,6 +55,29 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, surveyId
 		watch,
 		formState: { errors },
 	} = useForm<FormValues>();
+	const [surveyPropertyDetails, setSurveyPropertyDetails] = useState<any>();
+	const [isCheckoutLoading, setIsCheckoutLoading] = useState<boolean>(false);
+
+	useEffect(() => {
+		const fetchSurveyProperyDetails = async () => {
+			setIsCheckoutLoading(true);
+			try {
+				const res = await getSurveyPropertyDetails(surveyId);
+				if (res) {
+					toast.success("Successfully retrieved survey properties");
+					setSurveyPropertyDetails(res.data);
+				}
+			} catch (err) {
+				setIsCheckoutLoading(false);
+				console.error("Error fetching surveys:", err);
+			} finally {
+				setIsCheckoutLoading(false);
+			}
+		};
+		if (isOpen) {
+			fetchSurveyProperyDetails();
+		}
+	}, [isOpen]);
 
 	const initialSurveyProperties: SurveyProperty[] = [
 		{ id: "1", property: "Gender", value: "All gender" },
@@ -68,6 +92,15 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, surveyId
 	const [editingProperty, setEditingProperty] = useState<SurveyProperty | null>(null);
 	const [editedValue, setEditedValue] = useState<string>("");
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [estimatedBill, setEstimatedBill] = useState(0);
+
+	useEffect(() => {
+		const getEstimatedBill = () => {
+			const expectedBill = getPriceForQuestions(numberOfQuestions);
+			setEstimatedBill(expectedBill);
+		};
+		getEstimatedBill();
+	}, [numberOfQuestions]);
 
 	const handleEditClick = (prop: SurveyProperty) => {
 		setEditingProperty(prop);
@@ -133,7 +166,9 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, surveyId
 			prop.id === editingProperty.id ? { ...prop, value: editedValue } : prop
 		);
 		setSurveyProperties(updatedProperties);
-		handleDialogClose();
+		setTimeout(() => {
+			handleDialogClose();
+		}, 1000);
 	};
 
 	const handleCheckboxChange = (value: string, isChecked: boolean) => {
@@ -343,8 +378,6 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, surveyId
 		}
 	};
 
-	// const adminOption = watch("administrationOption");
-
 	const handleMakePayment = (data: FormValues) => {
 		console.log(data);
 	};
@@ -353,115 +386,126 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, surveyId
 		onClose();
 	};
 
-	const balance = 5000;
-	const estimatedBill = 2500;
+	const { loggedInUser } = useUser();
+	const balance = loggedInUser?.wallet || 0;
 
 	return (
 		<>
 			<Dialog open={isOpen} onOpenChange={handleCloseModal}>
 				<DialogContent className="sm:max-w-[550px] bg-white z-50 rounded-sm px-8">
-					<DialogHeader className="">
-						<DialogTitle className="text-center text-2xl font-bold text-black">
-							<p className="text-3xl font-bold text-center text-gray-800">Checkout</p>
-						</DialogTitle>
-					</DialogHeader>
-					<form
-						onSubmit={handleSubmit(handleMakePayment)}
-						className="flex flex-col items-center gap-5 py-2"
-					>
-						<div className="w-full flex flex-col gap-1 space-y-2">
-							<h2 className="text-lg font-semibold text-gray-900">Survey Details</h2>
-							<div className="flex items-center space-x-2">
-								<p className=" text-gray-700 font-semibold">Survey name:</p>
-								<span className="text-gray-600">{surveyName}</span>
+					{isCheckoutLoading ? (
+						<>
+							<div className="w-full flex items-center justify-center py-[200px]">
+								<Loader2 className="animate-spin h-[60px] w-[60px] mr-2 text-primary" />
 							</div>
-							<div className="flex items-center space-x-2">
-								<p className=" text-gray-700 font-semibold">Question limit:</p>
-								<span className="text-gray-600">5</span>
-							</div>
-						</div>
-
-						<div className="rounded-lg overflow-hidden w-full">
-							<Table className="table-auto border-collapse border-0 w-full ">
-								<TableHeader className="bg-gray-100">
-									<TableRow className="border-0 h-14 px-1">
-										<TableHead className="w-1/2 font-semibold text-gray-700">
-											Survey property
-										</TableHead>
-										<TableHead className="w-1/2 font-semibold text-gray-700">
-											Value
-										</TableHead>
-										<TableHead className="w-1/5 font-semibold text-gray-700 text-right">
-											Action
-										</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody className="border">
-									{surveyProperties.map((prop) => (
-										<TableRow className="h-14 px-2" key={prop.id}>
-											<TableCell className="font-medium text-gray-800 border-0">
-												{prop.property}
-											</TableCell>
-											<TableCell className="text-gray-600 border-0 whitespace-normal break-words">
-												{prop.property === "State" &&
-												prop.value === statesOfNigeria.join(",")
-													? "All states"
-													: prop.property === "Monthly Income" &&
-													  prop.value === monthlyIncomeOptions.join(",")
-													? "All income levels"
-													: prop.property === "Age Group" &&
-													  prop.value === ageGroupOptions.join(",")
-													? "All age groups"
-													: prop.property === "Education" &&
-													  prop.value === educationOptions.join(",")
-													? "All education levels"
-													: prop.value}
-											</TableCell>
-											<TableCell className="text-right border-0">
-												<Button
-													onClick={() => handleEditClick(prop)}
-													type="button"
-													variant="link"
-													className="text-primary hover:text-primary/95 p-0 h-auto cursor-pointer"
-												>
-													Edit
-												</Button>
-											</TableCell>
-										</TableRow>
-									))}
-								</TableBody>
-							</Table>
-
-							<div className="w-full mt-4 flex items-center justify-end">
-								<p className="text-xl font-bold">Estimated Bill: N{2500}</p>
-							</div>
-
-							{balance < estimatedBill && (
-								<div className="w-full mt-4 flex items-center justify-center">
-									<p className="text-xl font-bold text-center text-red-400">
-										Insufficient Fund
-									</p>
+						</>
+					) : (
+						<>
+							<DialogHeader className="">
+								<DialogTitle className="text-center text-2xl font-bold text-black">
+									<p className="text-3xl font-bold text-center text-gray-800">Checkout</p>
+								</DialogTitle>
+							</DialogHeader>
+							<form
+								onSubmit={handleSubmit(handleMakePayment)}
+								className="flex flex-col items-center gap-5 py-2"
+							>
+								<div className="w-full flex flex-col gap-1 space-y-2">
+									<h2 className="text-lg font-semibold text-gray-900">Survey Details</h2>
+									<div className="flex items-center space-x-2">
+										<p className=" text-gray-700 font-semibold">Survey name:</p>
+										<span className="text-gray-600">{surveyName}</span>
+									</div>
+									<div className="flex items-center space-x-2">
+										<p className=" text-gray-700 font-semibold">Question limit:</p>
+										<span className="text-gray-600">5</span>
+									</div>
 								</div>
-							)}
-						</div>
-						<div className="w-full mt-2">
-							{balance < estimatedBill ? (
-								<Button
-									type="button"
-									className="bg-primary hover:bg-primary/90 text-white cursor-pointer px-8 py-5 rounded-sm w-full"
-								>
-									Add money to wallet
-								</Button>
-							) : (
-								<Button
-									type="submit"
-									className="bg-primary hover:bg-primary/90 text-white cursor-pointer px-8 py-5 rounded-sm w-full"
-								>
-									Make Payment
-								</Button>
-							)}
-						</div>
-					</form>
+
+								<div className="rounded-lg overflow-hidden w-full">
+									<Table className="table-auto border-collapse border-0 w-full ">
+										<TableHeader className="bg-gray-100">
+											<TableRow className="border-0 h-14 px-1">
+												<TableHead className="w-1/2 font-semibold text-gray-700">
+													Survey property
+												</TableHead>
+												<TableHead className="w-1/2 font-semibold text-gray-700">
+													Value
+												</TableHead>
+												<TableHead className="w-1/5 font-semibold text-gray-700 text-right">
+													Action
+												</TableHead>
+											</TableRow>
+										</TableHeader>
+										<TableBody className="border">
+											{surveyProperties.map((prop) => (
+												<TableRow className="h-14 px-2" key={prop.id}>
+													<TableCell className="font-medium text-gray-800 border-0">
+														{prop.property}
+													</TableCell>
+													<TableCell className="text-gray-600 border-0 whitespace-normal break-words">
+														{prop.property === "State" &&
+														prop.value === statesOfNigeria.join(",")
+															? "All states"
+															: prop.property === "Monthly Income" &&
+															  prop.value ===
+																	monthlyIncomeOptions.join(",")
+															? "All income levels"
+															: prop.property === "Age Group" &&
+															  prop.value === ageGroupOptions.join(",")
+															? "All age groups"
+															: prop.property === "Education" &&
+															  prop.value === educationOptions.join(",")
+															? "All education levels"
+															: prop.value}
+													</TableCell>
+													<TableCell className="text-right border-0">
+														<Button
+															onClick={() => handleEditClick(prop)}
+															type="button"
+															variant="link"
+															className="text-primary hover:text-primary/95 p-0 h-auto cursor-pointer"
+														>
+															Edit
+														</Button>
+													</TableCell>
+												</TableRow>
+											))}
+										</TableBody>
+									</Table>
+
+									<div className="w-full mt-4 flex items-center justify-end">
+										<p className="text-xl font-bold">Estimated Bill: N{estimatedBill}</p>
+									</div>
+
+									{balance < estimatedBill && (
+										<div className="w-full mt-4 flex items-center justify-center">
+											<p className="text-xl font-bold text-center text-red-400">
+												Insufficient Fund
+											</p>
+										</div>
+									)}
+								</div>
+								<div className="w-full mt-2">
+									{balance < estimatedBill ? (
+										<Button
+											type="button"
+											className="bg-primary hover:bg-primary/90 text-white cursor-pointer px-8 py-5 rounded-sm w-full"
+										>
+											Add money to wallet
+										</Button>
+									) : (
+										<Button
+											type="submit"
+											className="bg-primary hover:bg-primary/90 text-white cursor-pointer px-8 py-5 rounded-sm w-full"
+										>
+											Make Payment
+										</Button>
+									)}
+								</div>
+							</form>
+						</>
+					)}
 				</DialogContent>
 			</Dialog>
 

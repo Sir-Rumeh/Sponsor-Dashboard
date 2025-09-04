@@ -27,6 +27,18 @@ export const viewSurveyDetails = async (id: number | string): Promise<any> => {
 	}
 };
 
+export const getSurveyPropertyDetails = async (id: number | string): Promise<any> => {
+	try {
+		const response: AxiosResponse<any> = await AxiosClient.get("/api/properties/survey-properties", {
+			params: { survey_id: id },
+		});
+		return response;
+	} catch (error) {
+		console.error("Fetching survey property details failed:", error);
+		throw error;
+	}
+};
+
 export const getSurveyRespondents = async (id: number | string): Promise<any> => {
 	try {
 		const response: AxiosResponse<any> = await AxiosClient.get("/api/admin/survey-responds-users", {

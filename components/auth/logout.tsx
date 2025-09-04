@@ -19,6 +19,7 @@ const Logout = () => {
 		startTransition(async () => {
 			try {
 				// Clear context
+				// clearLoggedInUser();
 				localStorage.removeItem("access_token");
 				const result = (await doLogout()) as LogoutResponse;
 

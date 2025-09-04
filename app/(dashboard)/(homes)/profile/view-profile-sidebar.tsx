@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
 import { handleProfileUpdate } from "./actions/handleProfileUpdate";
@@ -5,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import AvatarUpload from "./avatar-upload";
 import { useUser } from "@/contexts/UserContext";
+import EditIconSVG from "@/public/assets/svgs/EditIcon";
 
 const ViewProfileSidebar = () => {
 	const { loggedInUser } = useUser();
@@ -32,7 +35,7 @@ const ViewProfileSidebar = () => {
 									<form action={handleProfileUpdate}>
 										{/* <div className="grid grid-cols-1 sm:grid-cols-12 gap-x-6 md:px-6"> */}
 										<div className="flex flex-col items-center gap-x-6 md:px-6">
-											<div className="w-full max-w-xl">
+											<div className="w-full max-w-xl relative">
 												<div className="mb-5">
 													<Label
 														htmlFor="basicInput"
@@ -49,8 +52,11 @@ const ViewProfileSidebar = () => {
 														className="disabled:bg-gray-100 disabled:opacity-100 disabled:border-gray-400 border border-primary/50 px-5 dark:border-primary/50 focus:border-primary/50 dark:focus:border-primary/50 focus-visible:border-primary/50 h-12 rounded-md !shadow-none !ring-0"
 													/>
 												</div>
+												{/* <button className="scale-70 cursor-pointer absolute">
+													<EditIconSVG />
+												</button> */}
 											</div>
-											<div className="w-full max-w-xl">
+											<div className="w-full max-w-xl relative">
 												<div className="mb-5">
 													<Label
 														htmlFor="sponsorType"
@@ -69,7 +75,7 @@ const ViewProfileSidebar = () => {
 													/>
 												</div>
 											</div>
-											<div className="w-full max-w-xl">
+											<div className="w-full max-w-xl relative">
 												<div className="mb-5">
 													<Label
 														htmlFor="email"
@@ -88,7 +94,7 @@ const ViewProfileSidebar = () => {
 													/>
 												</div>
 											</div>
-											<div className="w-full max-w-xl">
+											<div className="w-full max-w-xl relative">
 												<div className="mb-5">
 													<Label
 														htmlFor="number"
@@ -107,7 +113,7 @@ const ViewProfileSidebar = () => {
 													/>
 												</div>
 											</div>
-											<div className="w-full max-w-xl">
+											<div className="w-full max-w-xl relative">
 												<div className="mb-5">
 													<Label
 														htmlFor="state"
@@ -126,7 +132,7 @@ const ViewProfileSidebar = () => {
 													/>
 												</div>
 											</div>
-											<div className="w-full max-w-xl">
+											<div className="w-full max-w-xl relative">
 												<div className="mb-5">
 													<Label
 														htmlFor="state"
