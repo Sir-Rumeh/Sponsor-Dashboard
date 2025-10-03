@@ -876,6 +876,7 @@ export const monthlyIncomeOptions = [
 	"Earn between N30,001 and N100,000 monthly",
 	"Earn above N100,000 monthly",
 ];
+
 export const ageGroupOptions = [
 	"18 - 24 years",
 	"25 - 34 years",
