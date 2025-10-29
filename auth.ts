@@ -18,17 +18,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 			},
 			authorize: async (credentials) => {
 				try {
-					// const { email, password } = await loginSchema.parseAsync(credentials);
-					// const response = await axios.post(`http://162.243.168.52:8000/v1/auth/login`, {
-					// 	email,
-					// 	password,
-					// });
-					// const user = { id: response.data.token, email: response.data.token };
-					// return user;
-					return {
-						id: "1d98e936518245035fa0b38b6fc3a314370fbaf6",
-						email: "1d98e936518245035fa0b38b6fc3a314370fbaf6",
-					};
+					const { email, password } = await loginSchema.parseAsync(credentials);
+					const response = await axios.post(`https://api.dev.getsurveyplus.com/v1/auth/login`, {
+						email,
+						password,
+					});
+					const user = { id: response.data.token, email: response.data.token };
+					return user;
+					// return {
+					// 	id: "1d98e936518245035fa0b38b6fc3a314370fbaf6",
+					// 	email: "1d98e936518245035fa0b38b6fc3a314370fbaf6",
+					// };
 				} catch (error) {
 					if (error instanceof ZodError) {
 						return null;
