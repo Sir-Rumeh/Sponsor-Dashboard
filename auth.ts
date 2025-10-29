@@ -25,10 +25,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 					});
 					const user = { id: response.data.token, email: response.data.token };
 					return user;
-					// return {
-					// 	id: "1d98e936518245035fa0b38b6fc3a314370fbaf6",
-					// 	email: "1d98e936518245035fa0b38b6fc3a314370fbaf6",
-					// };
 				} catch (error) {
 					if (error instanceof ZodError) {
 						return null;
