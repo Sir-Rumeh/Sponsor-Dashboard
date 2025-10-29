@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { LogOutIcon, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { doLogout, LogoutResponse } from "./actions/logout";
-import { useUser } from "@/contexts/UserContext";
 
 const Logout = () => {
 	const router = useRouter();
@@ -22,7 +21,6 @@ const Logout = () => {
 				// clearLoggedInUser();
 				localStorage.removeItem("access_token");
 				const result = (await doLogout()) as LogoutResponse;
-
 				if ("error" in result) {
 					toast.error(result.error);
 				} else {

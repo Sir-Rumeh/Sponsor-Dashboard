@@ -38,7 +38,7 @@ const PieChartComponent = () => {
 	return (
 		<div className="w-full">
 			<ChartContainer config={{}} className="">
-				<PieChart width={500} height={500} className="bg-red-400 p-2">
+				<PieChart width={500} height={500} className="p-2">
 					<Pie
 						data={chartData}
 						dataKey="value"

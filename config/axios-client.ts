@@ -45,7 +45,7 @@ AxiosClient.interceptors.response.use(
 		if (error?.response?.status === 400) {
 			toast.error(error?.response?.data?.error ?? "Request failed");
 		} else if (error?.response?.status === 401) {
-			toast.error("Your session timed out, sign in again to continue");
+			toast.error(error?.response?.data.error);
 			return Promise.reject(error);
 			// dispatch(logout());
 			// dispatch(uiStopLoading());

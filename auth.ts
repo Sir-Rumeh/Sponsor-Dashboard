@@ -9,6 +9,8 @@ import { loginUser } from "./config/auth-actions";
 import toast from "react-hot-toast";
 import axios from "axios";
 
+const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
 	providers: [
 		Credentials({
@@ -19,7 +21,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 			authorize: async (credentials) => {
 				try {
 					const { email, password } = await loginSchema.parseAsync(credentials);
-					const response = await axios.post(`https://api.dev.getsurveyplus.com/v1/auth/login`, {
+					const response = await axios.post(`${baseUrl}/v1/auth/login`, {
 						email,
 						password,
 					});

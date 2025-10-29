@@ -26,7 +26,7 @@ const RespondentsCard = ({ respondents }: { respondents: any[] }) => {
 				</div>
 
 				<div className="mt-2 space-y-6">
-					{respondents.length > 0 ? (
+					{respondents?.length > 0 ? (
 						respondents?.map((respondent, index) => {
 							return (
 								<div className="flex items-center justify-between gap-2" key={index}>

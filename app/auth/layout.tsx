@@ -1,5 +1,8 @@
+"use client";
+
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "react-hot-toast";
+import { ClientOnly } from "../client-only";
 
 export default function AuthLayout({
 	children,
@@ -7,9 +10,11 @@ export default function AuthLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-			<main className="min-h-screen">{children}</main>
-			<Toaster position="top-right" reverseOrder={false} />
-		</ThemeProvider>
+		// <ClientOnly>
+			<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+				<div className="min-h-screen w-full">{children}</div>
+				<Toaster position="top-right" reverseOrder={false} />
+			</ThemeProvider>
+		// </ClientOnly>
 	);
 }

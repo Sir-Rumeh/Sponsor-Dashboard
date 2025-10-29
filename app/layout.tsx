@@ -1,13 +1,17 @@
+"use client";
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { LoadingProvider } from "@/contexts/LoadingContext";
+import { ClientOnly } from "./client-only";
 const inter = Inter({
 	subsets: ["latin"],
 	display: "swap",
 });
 
-export const metadata: Metadata = {
+// export const metadata: Metadata = {
+const metadata: Metadata = {
 	title: "SurveyPlus Sponsors Dashboard",
 	description: "WowDash - Admin Dashboard Multipurpose Next.js, TypeScript, ShadCn UI & Tailwind Template",
 	// metadataBase: new URL("https://wowdash-nextjs-typescript-shadcn-5fu5.vercel.app"),
@@ -43,7 +47,9 @@ export default async function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${inter.className} antialiased`}>
-				<LoadingProvider>{children}</LoadingProvider>
+				{/* <ClientOnly> */}
+					<LoadingProvider>{children}</LoadingProvider>
+				{/* </ClientOnly> */}
 			</body>
 		</html>
 	);

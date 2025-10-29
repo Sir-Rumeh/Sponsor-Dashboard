@@ -46,6 +46,7 @@ interface UserContextType {
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
+const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
 	const [loggedInUser, setLoggedInUser] = useState<LoggedInUser | null>(null);
@@ -54,7 +55,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
-				const userResponse = await axios.get("https://api.dev.getsurveyplus.com/api/user", {
+				const userResponse = await axios.get(`${baseUrl}/api/user`, {
 					headers: {
 						Authorization: `Token ${session?.user?.email}`,
 					},

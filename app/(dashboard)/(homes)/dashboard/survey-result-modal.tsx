@@ -102,7 +102,7 @@ const SurveyResultModal: React.FC<SurveyResultModalProps> = ({ isOpen, onClose, 
 						<section className="md:col-span-1 grid grid-cols-1 gap-6">
 							<div className="bg-white p-6 rounded-lg shadow-md min-h-[350px]">
 								<h3 className="text-lg font-semibold mb-4">Market Share</h3>
-								{/* <PieChartComponent /> */}
+								<PieChartComponent />
 							</div>
 							<div className="bg-white rounded-lg shadow-md h-[20rem] overflow-y-scroll">
 								<Suspense fallback={<LoadingSkeleton height="h-64" text="Loading..." />}>

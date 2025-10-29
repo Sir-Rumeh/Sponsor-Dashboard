@@ -2,7 +2,6 @@
 
 import React, { useState, useTransition, useRef } from "react";
 import { signIn } from "next-auth/react";
-import toast from "react-hot-toast";
 import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,19 +9,13 @@ import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import SocialLogin from "./social-login";
 import { loginSchema } from "@/lib/zod";
 import { useLoading } from "@/contexts/LoadingContext";
-import { handleLoginAction } from "./actions/login";
 import { Label } from "../ui/label";
-import { useRouter } from "next/navigation";
-import { loginUser } from "@/config/auth-actions";
-import axios from "axios";
 
 const LoginForm = () => {
-	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
 	const [isPending, startTransition] = useTransition();
 	const { loading, setLoading } = useLoading();
@@ -38,14 +31,8 @@ const LoginForm = () => {
 
 	const onSubmit = (values: z.infer<typeof loginSchema>) => {
 		setLoading(true);
-
 		startTransition(async () => {
 			try {
-				// const response = await axios.post(`http://162.243.168.52:8000/v1/auth/login`, {
-				// 	email: values.email,
-				// 	password: values.password,
-				// });
-				// console.log(response.data.token);
 				await signIn("credentials", {
 					redirect: true,
 					email: values.email,
@@ -163,7 +150,7 @@ const LoginForm = () => {
 			</div>
 
 			{/* Social Login */}
-			<SocialLogin />
+			{/* <SocialLogin /> */}
 
 			{/* Signup Prompt */}
 			<div className="mt-8 text-center text-sm">
