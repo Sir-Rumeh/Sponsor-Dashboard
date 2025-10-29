@@ -54,7 +54,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
-				const userResponse = await axios.get("http://162.243.168.52:8000/api/user", {
+				const userResponse = await axios.get("https://api.dev.getsurveyplus.com/api/user", {
 					headers: {
 						Authorization: `Token ${session?.user?.email}`,
 					},
